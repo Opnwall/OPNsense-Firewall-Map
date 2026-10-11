@@ -218,7 +218,7 @@ class CollectorSnapshotTest(unittest.TestCase):
         self.assertEqual(meta["flows"][0]["bytes_from_remote"], 5)
         self.assertEqual(meta["selection_policy"], "bytes_desc_newest_identity_v1")
         for invalid in (valid[:-1], b"FMAGG4\0\0" + valid[8:], valid[:-26] + b"x" + valid[-25:],
-                        response(version=0), response(version=2)):
+                        response(version=collector.PROTOCOL_VERSION - 1), response(version=collector.PROTOCOL_VERSION + 1)):
             with self.subTest(length=len(invalid)), self.assertRaises(collector.CollectorError):
                 decode(invalid)
         with self.assertRaises(collector.CollectorError):

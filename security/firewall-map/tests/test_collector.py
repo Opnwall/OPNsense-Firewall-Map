@@ -1194,7 +1194,7 @@ class TimingContractTest(CollectorLoopTest):
         payload = self.payload()
         self.assertEqual((payload["status"], payload["error"], payload["reason"]),
                          ("collector_incompatible", str(error), "pf_abi"))
-        self.assertEqual((payload["protocol"], payload["expected_protocol"]), (1, 1))
+        self.assertEqual((payload["protocol"], payload["expected_protocol"]), (2, 2))
         self.assertEqual((payload["collector_pf_state_version"], payload["running_pf_state_version"]), (8, 9))
         self.assertIn("PF state version 8, the running kernel uses 9", payload["error"])
         self.assertEqual(self.diagnostic()["state_collector"]["incompatible"]["error"], str(error))
@@ -1206,7 +1206,7 @@ class TimingContractTest(CollectorLoopTest):
     def test_protocol_mismatch_is_a_package_problem_not_a_restart_loop(self):
         self.collector.step()  # baseline
         self.collector.step()
-        for protocol, shown in ((2, "2"), (None, "unknown")):
+        for protocol, shown in ((1, "1"), (None, "unknown")):
             with self.subTest(protocol=protocol):
                 error = COLLECTOR.state_collector.CollectorIncompatible("protocol", protocol=protocol)
                 with mock.patch.object(self.collector.collector_engine, "sample", side_effect=error), \
@@ -1215,11 +1215,11 @@ class TimingContractTest(CollectorLoopTest):
                 self.assertTrue(all(rest >= COLLECTOR.INCOMPATIBLE_RETRY_SECONDS for rest in rests))
                 payload = self.payload()
                 self.assertEqual((payload["status"], payload["reason"], payload["protocol"],
-                                  payload["expected_protocol"]), ("collector_incompatible", "protocol", protocol, 1))
+                                  payload["expected_protocol"]), ("collector_incompatible", "protocol", protocol, 2))
                 messages = [call.args[0] for call in logged.call_args_list if "incompatible protocols" in call.args[0]]
-                if protocol == 2:  # logged once per incompatibility, not once per retry
+                if protocol == 1:  # logged once per incompatibility, not once per retry
                     self.assertEqual(len(messages), 1)
-                    self.assertIn(f"collector protocol {shown}, expected 1", messages[0])
+                    self.assertIn(f"collector protocol {shown}, expected 2", messages[0])
                     self.assertIn("Reinstall or upgrade the Firewall Map package", messages[0])
                 status = self.diagnostic()["state_collector"]["incompatible"]
                 self.assertEqual((status["reason"], status["protocol"]), ("protocol", protocol))

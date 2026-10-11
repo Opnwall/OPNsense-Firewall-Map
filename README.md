@@ -257,7 +257,9 @@ until it is switched on.*
   - With **advanced mode** on: *Firewall map location* (where the firewall sits on the map:
     normally its public WAN address, geolocated with the configured database; *Use external
     public IP discovery* for a WAN behind upstream NAT, which finds the public address with
-    api.ipify.org and geolocates it the same way; or manual latitude and longitude, which win;
+    api.ipify.org and geolocates it the same way (behind upstream NAT the map shows your
+    network's traffic, but not the firewall's own connections, such as its DNS lookups or a
+    VPN it opens itself); or manual latitude and longitude, which win;
     and *IPv6 location*: IPv6 joins the IPv4 location when any precise IPv6 location of the
     firewall, its inside prefixes first, is within 50 km of it or within the two locations'
     accuracy. A location known only by country never counts, and tunnel and VPN interfaces are

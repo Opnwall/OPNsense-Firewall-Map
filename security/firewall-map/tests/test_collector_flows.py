@@ -81,7 +81,7 @@ class FlowsTest(unittest.TestCase):
             with self.subTest(flows=flows):
                 status, out, err = self.run_collector("--profile", str(self.profile), "--flows", flows)
                 # it starts (banner), then sees the closed input as the end of its requests
-                self.assertTrue(out.startswith("FMCOLLECTOR protocol=1 "), (out, err))
+                self.assertTrue(out.startswith("FMCOLLECTOR protocol=2 "), (out, err))
                 self.assertEqual(status, 0, err)
         # either order
         status, out, _ = self.run_collector("--flows", "500", "--profile", str(self.profile))

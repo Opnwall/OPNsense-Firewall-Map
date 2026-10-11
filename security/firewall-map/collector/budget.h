@@ -74,8 +74,10 @@
 /* Accounted bytes per unit on LP64, with a margin over what the synthetic
  * worst cases measure (unique flows, 90k to 300k states): a baseline entry
  * at the table's load (57-64 measured); a tracked flow: aggregate row and
- * index, rate history in two generations, ranking rows (750-800 measured)
- * plus the threat summary's per-flow row and the active profile's per-flow
+ * index, rate history in two generations, ranking rows (750-800 measured
+ * with the two-part key; the owner, in the key since protocol 2, adds about
+ * 100 more: 17 bytes in the flow row and in each of the six key copies, an
+ * estimate the scale test stays within) plus the threat summary's per-flow row and the active profile's per-flow
  * state (asset multiplier, flow volume, effective score and the bounded
  * regime's retention order: about 64); a candidate entry with its index
  * (about 136); a join entry, LAN label or pending inside-flow label (about

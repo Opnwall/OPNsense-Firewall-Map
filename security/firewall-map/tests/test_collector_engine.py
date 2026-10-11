@@ -228,7 +228,7 @@ class CollectorEngineSpecificationTest(unittest.TestCase):
 
     def test_version_reports_the_collector_protocol(self):
         report = subprocess.run([str(self.worker), "--version"], capture_output=True, text=True, check=True)
-        self.assertEqual(__import__("json").loads(report.stdout)["protocol"], 1)
+        self.assertEqual(__import__("json").loads(report.stdout)["protocol"], collector.PROTOCOL_VERSION)
 
 
 class CollectorProtocolIdentityTest(unittest.TestCase):
@@ -282,20 +282,22 @@ for line in sys.stdin.buffer:
             engine.sample(*CONTEXT)
         return raised.exception
 
-    def test_expected_protocol_is_1(self):
-        self.assertEqual(collector.PROTOCOL_VERSION, 1)
+    def test_expected_protocol_is_2(self):
+        # 2 since flows carry their owner (FMAGG5): a protocol 1 helper is incompatible
+        self.assertEqual(collector.PROTOCOL_VERSION, 2)
 
     def test_kernel_identity_is_uname_release_and_build(self):
         self.assertEqual(KERNEL_IDENTITY(), (os.uname().release, os.uname().version))
 
     def test_other_protocol_is_not_run_again_until_the_binary_changes(self):
-        self.install("FMCOLLECTOR protocol=2 pf_state_version=5 freebsd_version=1500000 extra=1")
+        # a stale protocol 1 helper (before flows carried their owner) is reported, not misread
+        self.install("FMCOLLECTOR protocol=1 pf_state_version=5 freebsd_version=1500000 extra=1")
         engine = self.engine()
         for _ in range(3):
             error = self.start(engine)
             self.assertIsInstance(error, collector.CollectorIncompatible)
-            self.assertEqual((error.failure_class, error.reason, error.protocol), ("incompatible", "protocol", 2))
-            self.assertIn("protocol 2", str(error))
+            self.assertEqual((error.failure_class, error.reason, error.protocol), ("incompatible", "protocol", 1))
+            self.assertIn("collector uses protocol 1", str(error))
         self.assertEqual((self.executions(), engine.starts), (1, 1))
         self.assertIsNone(engine.process)
         self.kernel.return_value = ("15.0-RELEASE", "build B")  # the kernel does not matter here
@@ -315,12 +317,12 @@ for line in sys.stdin.buffer:
                 self.assertIn("unknown protocol", str(error))
 
     def test_pf_abi_mismatch_is_not_run_again_on_the_same_binary_and_kernel(self):
-        self.install("FMCOLLECTOR protocol=1 pf_state_version=5 freebsd_version=1403000", (3, self.PF_ABI))
+        self.install("FMCOLLECTOR protocol=2 pf_state_version=5 freebsd_version=1403000", (3, self.PF_ABI))
         engine = self.engine()
         for _ in range(3):
             error = self.start(engine)
             self.assertIsInstance(error, collector.CollectorIncompatible)
-            self.assertEqual((error.failure_class, error.reason, error.protocol), ("incompatible", "pf_abi", 1))
+            self.assertEqual((error.failure_class, error.reason, error.protocol), ("incompatible", "pf_abi", 2))
             self.assertEqual((error.collector_pf_state_version, error.running_pf_state_version), (5, 7))
             self.assertIn("PF state version 5, the running kernel uses 7", str(error))
         self.assertEqual((self.executions(), engine.starts), (1, 1))
@@ -330,20 +332,20 @@ for line in sys.stdin.buffer:
         self.start(engine)
         self.assertEqual(self.executions(), 2)
         # another binary on the same kernel: evaluated again
-        self.install("FMCOLLECTOR protocol=1 pf_state_version=5 freebsd_version=1403000", (3, self.PF_ABI))
+        self.install("FMCOLLECTOR protocol=2 pf_state_version=5 freebsd_version=1403000", (3, self.PF_ABI))
         self.start(engine)
         self.start(engine)
         self.assertEqual(self.executions(), 3)
 
     def test_pf_abi_versions_are_not_invented(self):
-        self.install("FMCOLLECTOR protocol=1 pf_state_version=5 freebsd_version=0", (3, b"something else"))
+        self.install("FMCOLLECTOR protocol=2 pf_state_version=5 freebsd_version=0", (3, b"something else"))
         error = self.start(self.engine())
         self.assertEqual((error.reason, error.collector_pf_state_version, error.running_pf_state_version),
                          ("pf_abi", 5, None))
         self.assertIn("the running kernel uses unknown", str(error))
 
     def test_ordinary_failures_restart_the_collector(self):
-        self.install("FMCOLLECTOR protocol=1 pf_state_version=5 freebsd_version=0", (1, b"truncated dump"))
+        self.install("FMCOLLECTOR protocol=2 pf_state_version=5 freebsd_version=0", (1, b"truncated dump"))
         engine = self.engine()
         for _ in range(3):
             error = self.start(engine)
@@ -351,8 +353,8 @@ for line in sys.stdin.buffer:
             self.assertEqual(error.failure_class, "structural")
         self.assertEqual((self.executions(), engine.starts), (3, 3))
 
-    def test_malformed_protocol_1_banner_is_an_ordinary_failure(self):
-        self.install("FMCOLLECTOR protocol=1 pf_state_version=x")
+    def test_malformed_protocol_2_banner_is_an_ordinary_failure(self):
+        self.install("FMCOLLECTOR protocol=2 pf_state_version=x")
         engine = self.engine()
         error = self.start(engine)
         self.assertNotIsInstance(error, collector.CollectorIncompatible)

@@ -58,10 +58,10 @@ import zlib
 from . import classification, common, evidence as evidence_facts, profiles
 
 HELPER = "/usr/local/libexec/firewallmap-collector"
-PROTOCOL_VERSION = 1
+PROTOCOL_VERSION = 2
 # the banner's first two fields are the same in every protocol; the rest is protocol 1's
 BANNER_PROTOCOL = re.compile(rb"^FMCOLLECTOR protocol=(\d{1,9})[ \n]")
-BANNER = re.compile(rb"^FMCOLLECTOR protocol=1 pf_state_version=(\d{1,10}) freebsd_version=(\d{1,10})\n$")
+BANNER = re.compile(rb"^FMCOLLECTOR protocol=2 pf_state_version=(\d{1,10}) freebsd_version=(\d{1,10})\n$")
 MAX_FRAME = 4096
 # a response must complete within this; the window grows with the helper's own measured cost
 READ_TIMEOUT = 20
@@ -82,8 +82,18 @@ MEMORY_MIN_MIB, MEMORY_MAX_MIB, MEMORY_AUTO_MAX_MIB = 64, 16384, 1024
 MEMORY_AUTO_SHARE = 0.05
 # operator context maxima: over them a sample is refused, naming the kind (never truncated)
 CONTEXT_MAXIMA = {"L": 4096, "N": 8192, "A": 1024}
-_FLOW_RECORD, _CANDIDATE_RECORD, _THREAT_REMOTE_RECORD, _THREAT_CANDIDATE_RECORD = 182, 100, 62, 92
-_EVENT_RECORD, _CLASSIFIED_RECORD, _CLASS_SET_RECORD, _FIXED_RECORDS = 198, 40, 16, 4096
+# Fixed record sizes, kind byte included (collector/protocol.c *_RECORD_SIZE), and the largest
+# candidate value (collector/aggregate.h CANDIDATE_VALUE_MAX). The response budget below counts each
+# record with its 4-byte frame length; the flow record's size follows its struct.
+_FRAME = 4
+CANDIDATE_VALUE_MAX = 64
+_EVENT_SIZE, _THREAT_REMOTE_SIZE, _CLASSIFIED_SIZE, _CLASS_SET_SIZE = 194, 58, 36, 12
+_CANDIDATE_FIXED, _THREAT_CANDIDATE_FIXED = 32, 24
+_CANDIDATE_RECORD = _CANDIDATE_FIXED + CANDIDATE_VALUE_MAX + _FRAME
+_THREAT_REMOTE_RECORD = _THREAT_REMOTE_SIZE + _FRAME
+_THREAT_CANDIDATE_RECORD = _THREAT_CANDIDATE_FIXED + CANDIDATE_VALUE_MAX + _FRAME
+_EVENT_RECORD, _CLASSIFIED_RECORD = _EVENT_SIZE + _FRAME, _CLASSIFIED_SIZE + _FRAME
+_CLASS_SET_RECORD, _FIXED_RECORDS = _CLASS_SET_SIZE + _FRAME, 4096
 # classification (collector/classify.h): PF tables given Firewall Map meaning, one bit each
 CLASS_MAX_SETS, CLASS_MAX_ADDRESSES = 64, 20000
 CLASS_CATEGORIES = ("T", "C", "O")  # threat, country, operational
@@ -111,6 +121,7 @@ OMISSION_REASONS = ((1, "encoded_bytes"), (2, "state_count"), (4, "per_flow_evid
 SELECTION_POLICIES = {2: "bytes_desc_newest_identity_v1"}
 
 _FLOW = struct.Struct("!I17s17s17sQQQIIQQQQQQQBBIIBdddddBI")
+_FLOW_RECORD = 1 + _FLOW.size + _FRAME
 SECURITY_CLASSES = ("S0", "S1", "S2", "S3")
 # an age the kernel could not have measured (collector/lifetime.h FM_AGE_UNKNOWN): None, never 0
 AGE_UNKNOWN = 0xFFFFFFFF
@@ -512,7 +523,7 @@ def _decode(stream, process, query_keys, require_threat_summary, flow_limit=RANK
                           "security_class": SECURITY_CLASSES[security_class],
                           "presence": PRESENCES[presence], "attempts": attempts})
         elif kind == CANDIDATE:
-            if len(data) < 32:
+            if len(data) < _CANDIDATE_FIXED:
                 raise CollectorError("invalid FMAGG5 candidate record")
             flow, candidate_kind, sequence, weight, association, length = struct.unpack_from("!IBQQQH", data, 1)
             if flow >= len(flows) or candidate_kind not in range(PROTOCOL, RULE_LABEL + 1) \
@@ -520,7 +531,7 @@ def _decode(stream, process, query_keys, require_threat_summary, flow_limit=RANK
                 raise CollectorError("invalid FMAGG5 candidate identity")
             candidates.append((flow, candidate_kind, sequence, weight, association, data[32:]))
         elif kind == THREAT_REMOTE:
-            if not threats_present or len(data) != 58:
+            if not threats_present or len(data) != _THREAT_REMOTE_SIZE:
                 raise CollectorError("invalid FMAGG5 threat remote")
             index, = struct.unpack_from("!I", data, 1)
             remote_states, local_states, transferred, classes, youngest = struct.unpack_from("!QQQQI", data, 22)
@@ -530,7 +541,7 @@ def _decode(stream, process, query_keys, require_threat_summary, flow_limit=RANK
                                    "local_initiated_states": local_states, "bytes": transferred,
                                    "classes": _class_mask(classes, categories), "youngest": _age(youngest)})
         elif kind == THREAT_CANDIDATE:
-            if not threats_present or len(data) < 24:
+            if not threats_present or len(data) < _THREAT_CANDIDATE_FIXED:
                 raise CollectorError("invalid FMAGG5 threat candidate")
             remote, candidate_kind, sequence, association, length = struct.unpack_from("!IBQQH", data, 1)
             if remote >= len(threat_remotes) or candidate_kind not in THREAT_CANDIDATE_KINDS \
@@ -543,7 +554,7 @@ def _decode(stream, process, query_keys, require_threat_summary, flow_limit=RANK
                 raise CollectorError("FMAGG5 duplicate event match")
             matches[key] = match
         elif kind == CLASSIFIED:
-            if len(data) != 36:
+            if len(data) != _CLASSIFIED_SIZE:
                 raise CollectorError("invalid FMAGG5 classified address")
             address = _address(data[1:18])
             mask, evidence_mask, security_class, states = struct.unpack_from("!QBBQ", data, 18)
@@ -569,7 +580,7 @@ def _decode(stream, process, query_keys, require_threat_summary, flow_limit=RANK
                              "security_class": SECURITY_CLASSES[security_class], "score": score, "order": order,
                              "states": states})
         elif kind == CLASS_SET:
-            if len(data) != 12:
+            if len(data) != _CLASS_SET_SIZE:
                 raise CollectorError("invalid FMAGG5 classification set")
             set_id, category, status, entries = struct.unpack_from("!BBBQ", data, 1)
             if set_id != len(class_sets) or set_id >= len(categories) or chr(category) != categories[set_id] \
@@ -636,7 +647,7 @@ def _decode(stream, process, query_keys, require_threat_summary, flow_limit=RANK
 
 
 def _event_match(data, query_keys):
-    if len(data) != 194:
+    if len(data) != _EVENT_SIZE:
         raise CollectorError("invalid FMAGG5 event match")
     query_id, match_kind, proto = struct.unpack_from("!HBB", data, 1)
     if query_id >= len(query_keys) or match_kind not in EVENT_MATCH_KINDS:

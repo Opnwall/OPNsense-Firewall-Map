@@ -81,7 +81,7 @@ class StatusTest(unittest.TestCase):
                                                      "missing": [], "duplicates": [], "ranked": 0})
 
     def test_state_collector_status_and_version_warning(self):
-        timing = {"state_collector": {"helper": {"pid": 7, "starts": 2, "protocol": 1, "pf_state_version": 20230404,
+        timing = {"state_collector": {"helper": {"pid": 7, "starts": 2, "protocol": 2, "pf_state_version": 20230404,
                                                  "freebsd_version": 1403000},
                                       "state_limit": 372363, "telemetry": {"sequence": 9}, "last_sample_at": 100.0}}
         for kernel, warning in ((1403000, False), (1500000, True), (None, False)):
@@ -89,7 +89,7 @@ class StatusTest(unittest.TestCase):
                 status = STATUS.state_collector(timing)
                 self.assertEqual((status["version_warning"], status["state_limit"]), (warning, 372363))
                 self.assertEqual((status["state"], status["protocol"], status["expected_protocol"]),
-                                 ("running", 1, 1))
+                                 ("running", 2, 2))
         with mock.patch.object(STATUS, "kernel_version", return_value=None):
             self.assertEqual(STATUS.state_collector(None)["version_warning"], False)
             self.assertEqual(STATUS.state_collector(None)["state"], "stopped")
@@ -99,15 +99,15 @@ class StatusTest(unittest.TestCase):
             with mock.patch.object(STATUS, "kernel_version", return_value=None):
                 return STATUS.state_collector({"state_collector": fields})
 
-        mismatch = status(incompatible={"reason": "protocol", "protocol": 2, "expected_protocol": 1, "error": "x"},
+        mismatch = status(incompatible={"reason": "protocol", "protocol": 1, "expected_protocol": 2, "error": "x"},
                           last_error_at=200.0, last_sample_at=100.0)
         self.assertEqual((mismatch["state"], mismatch["protocol"], mismatch["expected_protocol"]),
-                         ("incompatible", 2, 1))
-        unknown = status(incompatible={"reason": "protocol", "protocol": None, "expected_protocol": 1, "error": "x"})
+                         ("incompatible", 1, 2))
+        unknown = status(incompatible={"reason": "protocol", "protocol": None, "expected_protocol": 2, "error": "x"})
         self.assertEqual((unknown["state"], unknown["protocol"]), ("incompatible", None))
-        abi = status(incompatible={"reason": "pf_abi", "protocol": 1, "expected_protocol": 1, "error": "x",
+        abi = status(incompatible={"reason": "pf_abi", "protocol": 2, "expected_protocol": 2, "error": "x",
                                    "collector_pf_state_version": 8, "running_pf_state_version": None})
-        self.assertEqual((abi["state"], abi["protocol"]), ("incompatible", 1))
+        self.assertEqual((abi["state"], abi["protocol"]), ("incompatible", 2))
         self.assertEqual((abi["incompatible"]["collector_pf_state_version"],
                           abi["incompatible"]["running_pf_state_version"]), (8, None))
         self.assertEqual(status(last_error_at=200.0, last_sample_at=100.0)["state"], "failed")

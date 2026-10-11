@@ -35,7 +35,7 @@
  * C structure is serialized.
  * The collector speaks exactly one protocol: it is announced in the banner and
  * carried by every response header (FMAGG5, FMSTATE2). */
-#define FM_PROTOCOL_VERSION 1
+#define FM_PROTOCOL_VERSION 2
 #define FM_FRAME_MAX 4096
 enum record_kind {
   RECORD_HEADER = 0,

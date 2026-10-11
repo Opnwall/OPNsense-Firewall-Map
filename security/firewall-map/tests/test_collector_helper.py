@@ -119,6 +119,44 @@ class Process:
         return 0
 
 
+COLLECTOR_SOURCE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "collector")
+
+
+def c_define(name, filename):
+    """An integer #define of the collector's C source."""
+    with open(os.path.join(COLLECTOR_SOURCE, filename)) as handle:
+        for line in handle:
+            parts = line.split()
+            if len(parts) >= 3 and parts[:2] == ["#define", name]:
+                return int(parts[2])
+    raise AssertionError(f"{name} not defined in {filename}")
+
+
+class RecordSizeTest(unittest.TestCase):
+    """The decoder's record sizes and the response budget follow the writer's (collector/protocol.c)."""
+
+    def test_record_sizes_match_the_collector(self):
+        def size(name):
+            return c_define(name, "protocol.c")
+        self.assertEqual(size("FLOW_RECORD_SIZE"), 1 + collector._FLOW.size)
+        self.assertEqual(size("SNAPSHOT_CANDIDATE_RECORD_SIZE"), 1 + collector._SNAPSHOT_CANDIDATE.size)
+        self.assertEqual(size("TELEMETRY_RECORD_SIZE"), 1 + collector._TELEMETRY.size)
+        self.assertEqual(size("FOOTER_RECORD_SIZE"), 1 + collector._FOOTER.size)
+        self.assertEqual(size("EVENT_RECORD_SIZE"), collector._EVENT_SIZE)
+        self.assertEqual(size("THREAT_REMOTE_RECORD_SIZE"), collector._THREAT_REMOTE_SIZE)
+        self.assertEqual(size("CLASSIFIED_RECORD_SIZE"), collector._CLASSIFIED_SIZE)
+        self.assertEqual(size("CLASS_SET_RECORD_SIZE"), collector._CLASS_SET_SIZE)
+        self.assertEqual(c_define("CANDIDATE_VALUE_MAX", "aggregate.h"), collector.CANDIDATE_VALUE_MAX)
+        with open(os.path.join(COLLECTOR_SOURCE, "protocol.c")) as handle:
+            self.assertIn("#define CANDIDATE_RECORD_FIXED(weight) ((weight) ? "
+                          f"{collector._CANDIDATE_FIXED}u : {collector._THREAT_CANDIDATE_FIXED}u)", handle.read())
+
+    def test_the_response_budget_counts_each_record_with_its_frame(self):
+        self.assertEqual(collector._FLOW_RECORD, c_define("FLOW_RECORD_SIZE", "protocol.c") + 4)
+        self.assertEqual(collector._EVENT_RECORD, c_define("EVENT_RECORD_SIZE", "protocol.c") + 4)
+        self.assertEqual(collector._CANDIDATE_RECORD, 32 + collector.CANDIDATE_VALUE_MAX + 4)
+
+
 class CollectorProtocolTest(unittest.TestCase):
     def decode(self, data, query_keys=(QUERY,), require_threat_summary=False, categories=(),
                asked=frozenset()):
@@ -183,7 +221,7 @@ class CollectorProtocolTest(unittest.TestCase):
             "checksum": response(VALID, corrupt=1),
             "unexpected magic": response(VALID, magic=b"FMSTATE2"),
             "header version 0": response([header(version=0), telemetry()]),
-            "header version 2": response([header(version=2), telemetry()]),
+            "header of another version": response([header(version=collector.PROTOCOL_VERSION + 1), telemetry()]),
             "header flags": response([b"\x00" + struct.pack("!II", collector.PROTOCOL_VERSION, 2), telemetry()]),
             "no footer": response(VALID, footer=False),
             "missing header": response(VALID[1:]),
