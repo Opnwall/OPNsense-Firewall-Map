@@ -55,6 +55,8 @@ and `/usr/local/etc/pkg/keys/dashboard-plus-repository.pub`.
 The firewall's live traffic on a world map: a dashboard widget, and a full-size page opened with
 the expand link on the widget or from **Reporting ▸ Firewall Map ▸ Map** (`/ui/firewallmap`).
 
+<img src="docs/screenshots/firewall-map.gif" alt="Firewall Map+: the live map, a hover card on an arc, and the details of a connection after a click">
+
 > [!IMPORTANT]
 > **Get two free keys for the best results.** Firewall Map+ works without them, but it is far more
 > useful with both:
@@ -80,10 +82,11 @@ address it is talking to, colored inbound/outbound: green for outbound connectio
 inbound ones (started outside). Red dots are sources the firewall blocked. Other coloring methods are selectable. 
 The filters above the map narrow it by traffic type, service, interface, inside host and country; 
 **Threats** opens the review list. On the right, **Top talkers** ranks hosts (or countries and networks) 
-with a live sparkline, and the details panel below explains whatever you click: here an arc to a 
-Microsoft server in Boydton, Virginia, showing the inside host that opened it, the service (HTTPS), 
-the remote network, the firewall's decision and rule, transfer totals and rates, with Investigate, 
-States and Kill states actions.*
+with a live sparkline, and the details panel below explains whatever you click: here an arc to
+Amazon servers in Boardman, Oregon (eight addresses share it; pick one above the diagram), showing
+the inside host that opened the connection, the service (TCP 8883), the remote network, the
+firewall's decision and rule, transfer totals and rates, with Investigate, States and Kill states
+actions.*
 
 <img src="docs/screenshots/firewall-map-widget.png" alt="Firewall Map+ dashboard widget" width="795">
 
@@ -503,6 +506,8 @@ two-second sample is one read of the QAT sysctl tree, parsed by the web server, 
 started.*
 
 ### CARP+
+
+<img src="docs/screenshots/carp.png" alt="CARP+" width="795">
 
 *High availability at a glance. The header gives this firewall's role over all its CARP virtual
 IPs in one pill (Master, Backup, Initializing, or Split when it is master for some and backup for
