@@ -573,8 +573,8 @@ FM_COLLECTOR_TEST_CC=clang FM_COLLECTOR_TEST_FLAGS="-g -fsanitize=address,undefi
 
 Releases share one version (`PLUGIN_VERSION` in each Makefile, no revision) and are published
 together: 0.50, 0.51, ... Between releases a package under development carries test builds
-numbered after the last release (Dashboard Plus 0.61.1, 0.61.2, ...), which are never tagged or
-published; at the next release every Makefile moves to the new version together (0.62).
+numbered after the last release (Firewall Map+ 0.62.1, 0.62.2, ...), which are never tagged or
+published; at the next release every Makefile moves to the new version together (0.63).
 The signed feed lives in the `packages` branch, kept as a single commit. On the machine holding
 the signing key:
 
@@ -589,6 +589,18 @@ versions and signs the whole catalog.
 
 ## Changelog
 
+- **0.63** (all packages): Firewall Map+ fixes.
+  - A connection is shown as belonging to whoever made it: the firewall's own traffic (for
+    example a site-to-site VPN tunnel) and each device's traffic to the same address are separate
+    on the map, so a device that also reached that address is no longer credited with the
+    tunnel. When several connections go to one address, the details panel lets you pick one.
+  - IPv6 connections can be clicked and hovered again: since 0.61 they start at the same place
+    as IPv4 and were drawn exactly underneath the IPv4 arcs. Arcs to one place now carry both.
+  - *Investigate* finds the registry record (RDAP) of IPv6 addresses, and names the network's
+    owner organization rather than a contact person.
+  - A collector left over from an older version is reported on the Status page as
+    incompatible, with a request to reinstall, instead of failing repeatedly.
+  - Dashboard Plus and VNStat Traffic+ are unchanged apart from the version.
 - **0.62** (all packages): Dashboard Plus adds CARP+, uses much less CPU and shows ZFS pools.
   - CARP+, the twelfth widget: this firewall's role over all its CARP VIPs (Master, Backup,
     Initializing, or Split when it is master for some and backup for others), preempt, skew and
