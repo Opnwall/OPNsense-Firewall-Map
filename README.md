@@ -16,9 +16,9 @@ Plus requires the official `os-vnstat` plugin, which supplies its collected traf
 
 I have been using them for a while and they are stable on my system. Your mileage may vary depending on your configuration. The only testbed I have is my firewall and they work well there.
 
-<img src="docs/screenshots/dashboard.png" alt="An OPNsense dashboard with Dashboard Plus and Firewall Map+ widgets">
+<img src="docs/screenshots/firewall-map.gif" alt="Firewall Map+: the live map, a hover card on an arc, and the details of a connection after a click">
 
-*This is a sample dashboard with System Information+, Firewall Map+, Gateways+ and other widgets, on OPNsense's built-in dark theme.*
+*Firewall Map+ on OPNsense's built-in dark theme: the live map, a hover card on an arc, and a connection's details after a click. Addresses and names are anonymized.*
 
 ## Install
 
@@ -54,8 +54,6 @@ and `/usr/local/etc/pkg/keys/dashboard-plus-repository.pub`.
 
 The firewall's live traffic on a world map: a dashboard widget, and a full-size page opened with
 the expand link on the widget or from **Reporting ▸ Firewall Map ▸ Map** (`/ui/firewallmap`).
-
-<img src="docs/screenshots/firewall-map.gif" alt="Firewall Map+: the live map, a hover card on an arc, and the details of a connection after a click">
 
 > [!IMPORTANT]
 > **Get two free keys for the best results.** Firewall Map+ works without them, but it is far more
