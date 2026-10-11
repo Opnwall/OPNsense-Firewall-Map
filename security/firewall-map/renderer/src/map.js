@@ -40,7 +40,6 @@ import {HOME_ICON_MAPPING, HOME_LAYER, homeIconAtlas} from './home.js';
 import {LABEL_ZOOM_STEP, createLabels} from './labels.js';
 import {createStyle} from './style.js';
 import worldData from './world.json';
-import {createClickLog} from './clicklog.js';
 
 // Antarctica only adds empty space below the flows.
 const world = {...worldData, features: worldData.features.filter((feature) => feature.id !== 'ATA')};
@@ -92,8 +91,6 @@ export function createFirewallMap(container, options = {}) {
 
   // deck.gl's own frame statistics (GPU memory, frame cost), kept for diagnostics() once a second
   let deckMetrics = {};
-  // click diagnostics (?clicklog=1 only), created once deck exists
-  let clickLog = null;
   const deck = new Deck({
     parent: container,
     _onMetrics: (metrics) => {
@@ -125,7 +122,6 @@ export function createFirewallMap(container, options = {}) {
       tooltip.show(tooltipHtml(info.object, info.layer), info.x, info.y, colors);
     },
     onClick: (info) => {
-      clickLog?.clicked(info);
       if (options.onSelect && info.object && info.layer) {
         options.onSelect(selection(info.object, info.layer.id));
       }
@@ -134,7 +130,6 @@ export function createFirewallMap(container, options = {}) {
   });
   // Exposed for in-browser diagnostics of the live widget.
   container.firewallMapDeck = deck;
-  clickLog = createClickLog(container, deck, {pickingRadius: PICKING_RADIUS, follow});
   // The browser can take the GPU away (memory pressure, sleep, a driver reset). The map cannot
   // repaint without it, so the host is told and builds a new renderer; preventDefault lets the
   // browser hand the context back. The events do not bubble: listen while they travel down.
