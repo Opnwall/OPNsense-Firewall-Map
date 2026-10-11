@@ -72,8 +72,11 @@ export function buildArcs(data, options = DEFAULT_OPTIONS) {
     if (!origin || !dest) {
       continue;
     }
-    // a connection Suricata alerted on is never merged: it gets an arc of its own
-    const key = item.ids_flow ? `${item.origin}>ids:${item.ids_flow.key}` : `${item.origin}>${dest.lat},${dest.lon}`;
+    // a connection Suricata alerted on is never merged: it gets an arc of its own. Others merge by
+    // where they start as well as where they end: the IPv4 and IPv6 addresses of one firewall can
+    // sit at the same place, and two arcs there would be drawn one exactly on top of the other
+    const key = item.ids_flow ? `${item.origin}>ids:${item.ids_flow.key}`
+      : `${origin.lat},${origin.lon}>${dest.lat},${dest.lon}`;
     const rate = item.rate ?? item.count ?? 0;
     const rateIn = item.rate_in ?? rate;
     const rateOut = item.rate_out ?? 0;
@@ -100,7 +103,7 @@ export function buildArcs(data, options = DEFAULT_OPTIONS) {
     .sort((a, b) => (b.members[0].ids_flow ? 1 : 0) - (a.members[0].ids_flow ? 1 : 0) || b.flow.rate - a.flow.rate);
   // lanes stay put across refreshes: an arch keeps its bend while it lives, new arches take the
   // first free lane of their cell, so nothing jumps when rankings change
-  const cellOf = ({flow, dest}) => `${flow.origin}|${Math.round(dest.lat * 2)}|${Math.round(dest.lon * 2)}`;
+  const cellOf = ({origin, dest}) => `${origin.lat},${origin.lon}|${Math.round(dest.lat * 2)}|${Math.round(dest.lon * 2)}`;
   const previous = options.previousLanes || new Map();
   const taken = new Map();
   const laneOf = new Map();

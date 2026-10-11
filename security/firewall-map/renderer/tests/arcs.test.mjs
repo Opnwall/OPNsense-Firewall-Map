@@ -45,6 +45,24 @@ test('addresses at the same coordinates share one arc carrying their combined tr
   assert.ok(frankfurt, 'the two Frankfurt addresses share an arc');
 });
 
+test('one firewall\'s IPv4 and IPv6 flows to one place share an arc, never one under the other', () => {
+  // the IPv6 address is placed at the IPv4 location (one house): its arcs start at the same spot
+  const home6 = {id: '2001:db8::1', lat: home.lat, lon: home.lon, local: true};
+  const elsewhere6 = {id: '2001:db8::2', lat: 40.71, lon: -74.0, local: true};
+  const data = {
+    locations: [home, home6, elsewhere6, place('203.0.113.1', 50.11, 8.68), place('2001:db8:f::1', 50.11, 8.68)],
+    flows: [flow('203.0.113.1'), flow('2001:db8:f::1', {origin: home6.id})],
+  };
+  const arcs = buildArcs(data, DEFAULT_OPTIONS);
+  assert.equal(arcs.length, 1);
+  assert.deepEqual(arcs[0].members.map((member) => member.dest), ['203.0.113.1', '2001:db8:f::1']);
+  // an IPv6 house placed elsewhere draws its own arc from there
+  data.flows[1] = flow('2001:db8:f::1', {origin: elsewhere6.id});
+  const apart = buildArcs(data, DEFAULT_OPTIONS);
+  assert.equal(apart.length, 2);
+  assert.notDeepEqual(apart[0].path, apart[1].path);
+});
+
 test('a connection Suricata alerted on keeps an arc of its own', () => {
   const data = {
     locations: [home, place('203.0.113.1', 50.11, 8.68), place('203.0.113.2', 50.11, 8.68)],
