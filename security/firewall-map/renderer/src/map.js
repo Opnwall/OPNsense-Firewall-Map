@@ -40,6 +40,7 @@ import {HOME_ICON_MAPPING, HOME_LAYER, homeIconAtlas} from './home.js';
 import {LABEL_ZOOM_STEP, createLabels} from './labels.js';
 import {createStyle} from './style.js';
 import worldData from './world.json';
+import {createClickLog} from './clicklog.js';
 
 // Antarctica only adds empty space below the flows.
 const world = {...worldData, features: worldData.features.filter((feature) => feature.id !== 'ATA')};
@@ -63,6 +64,10 @@ function fitZoom(width) {
  * options: {theme, settings, text, onSelect(selection), onFollowChange(on), onContextLost()}.
  * `text` is the caller's translation table (see text.js); `settings` as parseSettings() returns.
  */
+// arcs are 1.5px wide: pick within a few pixels so clicks and hovers land reliably, but not so
+// far that an empty-looking spot answers
+const PICKING_RADIUS = 5;
+
 export function createFirewallMap(container, options = {}) {
   let colors = palette(options.theme);
   let settings = {...DEFAULT_OPTIONS, ...(options.settings || {})};
@@ -87,6 +92,8 @@ export function createFirewallMap(container, options = {}) {
 
   // deck.gl's own frame statistics (GPU memory, frame cost), kept for diagnostics() once a second
   let deckMetrics = {};
+  // click diagnostics (?clicklog=1 only), created once deck exists
+  let clickLog = null;
   const deck = new Deck({
     parent: container,
     _onMetrics: (metrics) => {
@@ -108,9 +115,7 @@ export function createFirewallMap(container, options = {}) {
     },
     controller: {scrollZoom: {smooth: true}, dragRotate: false, touchRotate: false},
     useDevicePixels: true,
-    // arcs are 1.5px wide: pick within a few pixels so clicks and hovers land reliably, but not so
-    // far that an empty-looking spot answers
-    pickingRadius: 5,
+    pickingRadius: PICKING_RADIUS,
     // arrow pointer so endpoints and arches can be hovered; the hand only while dragging
     getCursor: ({isDragging, isHovering}) => isDragging ? 'grabbing' : (isHovering ? 'pointer' : 'default'),
     onHover: (info) => {
@@ -120,6 +125,7 @@ export function createFirewallMap(container, options = {}) {
       tooltip.show(tooltipHtml(info.object, info.layer), info.x, info.y, colors);
     },
     onClick: (info) => {
+      clickLog?.clicked(info);
       if (options.onSelect && info.object && info.layer) {
         options.onSelect(selection(info.object, info.layer.id));
       }
@@ -128,6 +134,7 @@ export function createFirewallMap(container, options = {}) {
   });
   // Exposed for in-browser diagnostics of the live widget.
   container.firewallMapDeck = deck;
+  clickLog = createClickLog(container, deck, {pickingRadius: PICKING_RADIUS, follow});
   // The browser can take the GPU away (memory pressure, sleep, a driver reset). The map cannot
   // repaint without it, so the host is told and builds a new renderer; preventDefault lets the
   // browser hand the context back. The events do not bubble: listen while they travel down.
