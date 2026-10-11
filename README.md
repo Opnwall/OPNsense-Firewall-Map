@@ -16,9 +16,9 @@ Plus requires the official `os-vnstat` plugin, which supplies its collected traf
 
 I have been using them for a while and they are stable on my system. Your mileage may vary depending on your configuration. The only testbed I have is my firewall and they work well there.
 
-<img src="docs/screenshots/firewall-map.gif" alt="Firewall Map+: the live map, a hover card on an arc, and the details of a connection after a click">
+<img src="docs/screenshots/dashboard.gif" alt="An OPNsense dashboard with System Information+, the live Firewall Map+ widget and Gateways+">
 
-*Firewall Map+ on OPNsense's built-in dark theme: the live map, a hover card on an arc, and a connection's details after a click. Addresses and names are anonymized.*
+*A dashboard with System Information+, the live Firewall Map+ widget and Gateways+ next to OPNsense's own widgets, on its built-in dark theme. Addresses and names are anonymized.*
 
 ## Install
 
