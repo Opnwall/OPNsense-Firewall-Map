@@ -31,6 +31,15 @@
 import {escapeHtml, fill, formatBytes, plain, plural} from './format.js';
 import {cssVariables, palette, readTheme} from './palette.js';
 import {textTable} from './text.js';
+import {localizeText} from './i18n.js';
+
+export function profileName(profile) {
+  const name = profile?.name;
+  if (!profile?.builtin) return name;
+  const key = `profile_name_${String(name).toLowerCase()}`;
+  return localizeText({[key]: name})[key];
+}
+
 
 export function hasWebGL() {
   try {
@@ -118,7 +127,7 @@ export function waitText(summary, text) {
   if (summary?.status !== 'waiting') {
     return null;
   }
-  const profile = summary.ranking_profile?.name;
+  const profile = profileName(summary.ranking_profile);
   if (summary.reason === 'profile' && profile) {
     return fill(text.map_waiting_profile, {profile: plain(profile)});
   }
@@ -198,7 +207,7 @@ export function statusParts(summary, shown, settings, text) {
     }
   }
   // the one ranking every viewer sees (an administrative setting, never a viewer's choice)
-  const profile = summary.ranking_profile?.name;
+  const profile = profileName(summary.ranking_profile);
   if (profile && text.map_profile) {
     parts.push(escapeHtml(fill(text.map_profile, {profile: plain(profile)})));
   }

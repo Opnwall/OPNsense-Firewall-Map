@@ -8,6 +8,10 @@
             <endpoint>/api/firewallmap/flow/summary</endpoint>
         </endpoints>
         <translations>
+        <profile_name_balanced>Balanced</profile_name_balanced>
+        <profile_name_bandwidth>Bandwidth</profile_name_bandwidth>
+        <profile_name_connections>Connections</profile_name_connections>
+        <profile_name_security>Security</profile_name_security>
             <title>Firewall Map+</title>
             <dashboard_title>Firewall Map</dashboard_title>
             <active_flows_one>{count} active flow</active_flows_one>

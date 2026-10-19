@@ -1,3 +1,4 @@
+<script src="/ui/js/firewall-map-grid-i18n.js?v=1"></script>
 {#
  # Copyright (C) 2026 Claudio Guareschi <cguareschimd@gmail.com>
  # All rights reserved.
@@ -87,6 +88,7 @@
             }
             profilesLoaded = true;
             profileGrid().UIBootgrid({
+                tabulatorOptions: FirewallMapGridI18n.tableOptions(),
                 search: '/api/firewallmap/profiles/search_item',
                 get: '/api/firewallmap/profiles/get_item/',
                 set: '/api/firewallmap/profiles/set_item/',
@@ -133,6 +135,7 @@
                     }
                 }
             });
+            FirewallMapGridI18n.apply(profileGrid());
         };
 
         // tabs as on OPNsense's own pages: the selected one is kept in the URL

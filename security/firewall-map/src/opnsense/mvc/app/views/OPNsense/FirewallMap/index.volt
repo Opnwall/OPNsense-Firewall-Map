@@ -437,6 +437,7 @@
 <script>
 $(function () {
     const label = {{ fwlang._('Map')|json_encode }};
+    document.title = document.title.replace(/^Map(?= \|)/, label);
     document.querySelectorAll('a[href="/ui/firewallmap"]').forEach(function (link) {
         const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
         let node;

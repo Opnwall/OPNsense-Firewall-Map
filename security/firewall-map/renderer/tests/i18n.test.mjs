@@ -42,3 +42,10 @@ test('showing idle sessions does not inflate transmitting count in either locale
     assert.equal(shown.length, 3);
   }
 });
+
+test('every widget and renderer message has a Chinese translation', () => {
+  const block = xml.slice(xml.indexOf('<translations>'), xml.indexOf('</translations>'));
+  for (const [, key] of block.matchAll(/<([a-z0-9_]+)>([^<]*)<\/\1>/g)) {
+    assert.ok(zh[key], key);
+  }
+});

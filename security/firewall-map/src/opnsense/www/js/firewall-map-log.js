@@ -5,7 +5,12 @@
     function translate(value) {
         const text = String(value ?? '').trim();
         if (!chinese()) return text;
+        if (text === 'settings applied') return '设置已应用';
+        if (text === 'settings changed: reloading them') return '设置已更改：正在重新加载';
         let match;
+        if ((match = text.match(/^blocklist aliases: (.+)$/))) return `黑名单别名：${match[1].replace(/\badded /g, '已添加 ').replace(/\bremoved /g, '已移除 ').replace(/\bupdated /g, '已更新 ')}`;
+        if ((match = text.match(/^threat lists without a PF table are not used \(enable Maintain blocklist aliases or create the aliases\): (.+)$/))) return `以下威胁名单缺少 PF 表，未被使用（请启用“维护黑名单别名”或创建别名）：${match[1]}`;
+
         if ((match = text.match(/^geolocation download failed \((\d+) in a row\): next try in (\d+) min$/))) {
             return `地理库下载连续失败 ${match[1]} 次，将在 ${match[2]} 分钟后重试`;
         }

@@ -28,7 +28,7 @@
 const AUTO_HEIGHT = 10000;
 // the renderer's content hash, written by tools/build-renderer.sh: a new renderer has a new
 // address, so a browser never runs an old cached copy with a newer widget
-const RENDERER_VERSION = 'a10754ba68fa';
+const RENDERER_VERSION = '8c38a9bceef5';
 // follow traffic is the map's own toggle, remembered per browser (as on the full-size map)
 const FOLLOW_KEY = 'firewallmap.widget.follow';
 
@@ -103,6 +103,7 @@ export default class FirewallMap extends BaseWidget {
 
     /** How this widget draws the map. The plugin's own settings are at Reporting: Firewall Map: Settings. */
     async getWidgetOptions() {
+        this.translations = (await this._loadRenderer()).localizeText(this.translations);
         const choices = (values) => values.map(([value, label]) => ({value, label}));
         const defaults = window.FirewallMapRenderer?.DEFAULT_OPTIONS || {};
         return {
@@ -340,11 +341,11 @@ export default class FirewallMap extends BaseWidget {
             this._status(`${this.translations.renderer_failed}: ${error?.message || error}`);
             return;
         }
+        this.translations = renderer.localizeText(this.translations);
         if (!renderer.host.hasWebGL()) {
             this._status(this.translations.webgl_unavailable);
             return;
         }
-        this.translations = renderer.localizeText(this.translations);
         $(`#${this.id}-title`).html(`<b>${renderer.escapeHtml(this.translations.dashboard_title)}</b>`);
         const settings = await this._settings();
         // removed while the renderer or the settings loaded: create nothing
@@ -367,10 +368,14 @@ export default class FirewallMap extends BaseWidget {
             this._setFollow(settings.follow, false);
             $(`#${this.id}-firewall-map-follow`).off('click').on('click', () => this._setFollow(!this.settings.follow));
             $(`#${this.id}-firewall-map-camera`).off('click').on('click', () => this._takeSnapshot());
+            $(`#${this.id}-firewall-map-follow`).attr('title', this.translations.follow).attr('aria-label', this.translations.follow);
+            $(`#${this.id}-firewall-map-camera`).attr('title', this.translations.snapshot_take).attr('aria-label', this.translations.snapshot_take);
             $(`#${this.id}-firewall-map-idle`).attr('title', this.translations.map_show_idle).attr('aria-label', this.translations.map_show_idle);
             $(`#${this.id}-firewall-map-idle`).off('click').on('click', () => {
                 this.showIdle = !this.showIdle;
-                $(`#${this.id}-firewall-map-idle`).attr('aria-pressed', String(this.showIdle))
+                $(`#${this.id}-firewall-map-follow`).attr('title', this.translations.follow).attr('aria-label', this.translations.follow);
+            $(`#${this.id}-firewall-map-camera`).attr('title', this.translations.snapshot_take).attr('aria-label', this.translations.snapshot_take);
+            $(`#${this.id}-firewall-map-idle`).attr('aria-pressed', String(this.showIdle))
                     .attr('title', this.showIdle ? this.translations.map_hide_idle : this.translations.map_show_idle)
                     .attr('aria-label', this.showIdle ? this.translations.map_hide_idle : this.translations.map_show_idle)
                     .toggleClass('active', this.showIdle);

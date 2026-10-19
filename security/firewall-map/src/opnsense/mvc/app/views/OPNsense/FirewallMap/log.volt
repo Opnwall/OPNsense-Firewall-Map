@@ -1,4 +1,5 @@
-<script src="/ui/js/firewall-map-log.js?v=3"></script>
+<script src="/ui/js/firewall-map-grid-i18n.js?v=1"></script>
+<script src="/ui/js/firewall-map-log.js?v=4"></script>
 <div class="alert alert-info">{{ fwlang._('Historical warnings are retained. Check the latest entries and the Status page for current download health.') }} <a href="/ui/firewallmap/status">{{ fwlang._('Status') }}</a></div>
 {#
  # Copyright (c) 2019 Deciso B.V.
@@ -111,9 +112,11 @@
               },
           },
           tabulatorOptions: {
-              index: "rnum"
+              index: "rnum",
+              ...FirewallMapGridI18n.tableOptions()
           }
       });
+      FirewallMapGridI18n.apply(grid_log);
       $(".filter_act").change(function(event){
           event.stopPropagation();
           if (window.localStorage) {
