@@ -24,9 +24,9 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Build the plugin packages on an OPNsense machine.
+# Build only the Firewall Map plugin on an OPNsense machine.
 #
-#   tools/build.sh                          every plugin, release package names
+#   tools/build.sh                          Firewall Map release package
 #   tools/build.sh security/firewall-map    one plugin
 #   DEVEL=1 tools/build.sh                  development packages (os-<name>-devel)
 #
@@ -40,7 +40,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SERIES="${SERIES:-$(opnsense-version -a 2>/dev/null || echo master)}"
 WORK="${WORK:-/tmp/opnsense-plugins-framework}"
 UPSTREAM="${UPSTREAM:-https://github.com/opnsense/plugins.git}"
-PLUGINS="${*:-misc/dashboard-plus misc/vnstat-plus security/firewall-map}"
+PLUGINS="${*:-security/firewall-map}"
+[ "$PLUGINS" = security/firewall-map ] || { echo "Only security/firewall-map is supported" >&2; exit 1; }
 
 if [ ! -d "${WORK}/.git" ]; then
     BRANCH="stable/${SERIES}"

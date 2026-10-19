@@ -1,6 +1,6 @@
 # 自动发布 Firewall Map
 
-工作流：[Firewall Map release](https://github.com/Opnwall/opnsense-dashboard-plus/actions/workflows/firewall-map-release.yml)。目前目标固定为 OPNsense 26.7、FreeBSD 15.1 amd64，源中 ABI 为 `FreeBSD:15:amd64`。升级固件系列时需同时更新构建目标、框架固定提交及 `metadata.py`，重新实机验证。
+工作流：[Firewall Map release](https://github.com/Opnwall/OPNsense-Firewall-Map/actions/workflows/firewall-map-release.yml)。目前目标固定为 OPNsense 26.7、FreeBSD 15.1 amd64，源中 ABI 为 `FreeBSD:15:amd64`。升级固件系列时需同时更新构建目标、框架固定提交及 `metadata.py`，重新实机验证。
 
 ## 发布新版本
 
@@ -33,7 +33,7 @@ GitHub Release 与分支提交无法跨 API 原子提交。如果中途失败，
 仓库只发布公钥。更换公钥必须先在设备完成信任迁移，不得关闭签名验证。更新私钥 Secret 可使用：
 
 ```sh
-gh secret set PKG_SIGNING_KEY --repo Opnwall/opnsense-dashboard-plus --env signed-release < /secure/path/repository.key
+gh secret set PKG_SIGNING_KEY --repo Opnwall/OPNsense-Firewall-Map --env signed-release < /secure/path/repository.key
 ```
 
 产物保留 30 天。工作流不登录或自动升级家庭设备；设备继续通过既有签名源的固件更新获取新版本。

@@ -50,9 +50,7 @@ fi
 mkdir -p "${DIR}"
 for PACKAGE in "$@"; do
     NAME="$(pkg query -F "${PACKAGE}" %n)"
-    case "${NAME}" in
-        *-devel) echo "Refusing development package ${PACKAGE}" >&2; exit 1 ;;
-    esac
+    [ "$NAME" = os-firewall-map ] || { echo "Only os-firewall-map release packages are supported" >&2; exit 1; }
     for OLD in "${DIR}/${NAME}"-[0-9]*.pkg; do
         [ -e "${OLD}" ] && [ "$(pkg query -F "${OLD}" %n)" = "${NAME}" ] && rm -f "${OLD}"
     done

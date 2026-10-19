@@ -246,8 +246,8 @@ static bool scenario(const char *path, unsigned sample, pf_state_callback callba
     s.pf_bytes[0] = forward; s.pf_bytes[1] = reverse;
     s.pf_packets[0] = forward_packets; s.pf_packets[1] = reverse_packets;
     s.peer[0] = s.peer[1] = 4;
-    snprintf(s.interface, sizeof(s.interface), "%s", interface);
-    if (strcmp(original, "-")) snprintf(s.original_interface, sizeof(s.original_interface), "%s", original);
+    snprintf(s.interface, sizeof(s.interface), "%.*s", (int)sizeof(s.interface) - 1, interface);
+    if (strcmp(original, "-")) snprintf(s.original_interface, sizeof(s.original_interface), "%.*s", (int)sizeof(s.original_interface) - 1, original);
     snprintf(s.label, sizeof(s.label), "%s", label);
     ok = callback(&s, arg, error);
   }
