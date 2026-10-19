@@ -1,38 +1,3 @@
-# OPNsense-Firewall-Map
-
-OPNsense 防火墙地图插件：在完整地图和仪表盘地图部件中显示 PF 与 Mihomo 连接，区分正在传输、空闲和等待采样，并提供简体中文界面。
-
-本项目只维护、测试和编译 **os-firewall-map**。适用 OPNsense 26.7 / FreeBSD 15 / amd64。
-
-## 安装与升级
-
-- [最新版安装包与校验文件](https://github.com/Opnwall/OPNsense-Firewall-Map/releases/latest)
-- [签名软件源配置](docs/signed-repository.md)
-- [GitHub Actions 自动发布说明](docs/github-actions-release.md)
-- [Mihomo 数据源说明](docs/mihomo.md)
-
-已配置签名源的设备通过固件更新升级，或执行：
-
-```sh
-pkg update -r OpnwallDashboardPlus
-pkg upgrade -y -r OpnwallDashboardPlus os-firewall-map
-```
-
-兼容说明：仓库已从 `opnsense-dashboard-plus` 更名；软件源 ID `OpnwallDashboardPlus`、现有公钥和设备配置文件名保持兼容。此 ID 不表示本项目仍编译其他插件。旧 GitHub 地址自动重定向到新仓库。
-
-## 构建与发布
-
-```sh
-git clone https://github.com/Opnwall/OPNsense-Firewall-Map.git
-cd OPNsense-Firewall-Map
-sh tools/build-renderer.sh          # 修改前端时运行
-sh tools/build.sh                   # 在目标 OPNsense 上仅编译地图插件
-```
-
-Actions 使用 FreeBSD 15.1 虚拟机，构建入口固定为 `security/firewall-map`。发布前更新 Makefile 版本和 `releases/firewall-map-VERSION.md`，推送对应版本标签；Release 与签名源使用相同安装包。
-
-地图原始功能和界面说明保留如下。项目派生自 Claudio Guareschi 的 Dashboard Plus，保留原作者版权与 BSD 2-Clause 许可。
-
 ## Firewall Map+
 
 The firewall's live traffic on a world map: a dashboard widget, and a full-size page opened with
