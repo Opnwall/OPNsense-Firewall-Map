@@ -203,10 +203,23 @@ def validate(path, probe):
         raise RuntimeError("downloaded database failed validation")
 
 
+def open_download(request):
+    """Bridge short resolver startup gaps without bypassing TLS or retrying bad credentials."""
+    for attempt in range(3):
+        try:
+            return urllib.request.urlopen(request, timeout=TIMEOUT)
+        except urllib.error.URLError as error:
+            if not isinstance(error.reason, socket.gaierror) or error.reason.errno != socket.EAI_AGAIN or attempt == 2:
+                raise
+            delay = (2, 5)[attempt]
+            log_notice(f"temporary DNS lookup failure: retry {attempt + 1}/2 in {delay} s")
+            time.sleep(delay)
+
+
 def download(url, target, progress=None):
     """Fetch `url` into `target`, telling `progress(done, total)` as it goes (total may be None)."""
     request = urllib.request.Request(url, headers={"User-Agent": "OPNsense-FirewallMap"})
-    with urllib.request.urlopen(request, timeout=TIMEOUT) as response, open(target, "wb") as handle:
+    with open_download(request) as response, open(target, "wb") as handle:
         total = int(response.headers.get("Content-Length") or 0) or None
         done = 0
         while True:

@@ -30,6 +30,7 @@
     <page-diagnostics-logs-firewallmap>
         <name>Reporting: Firewall Map: Log File</name>
         <patterns>
+            <pattern>ui/firewallmap/log</pattern>
             <pattern>ui/diagnostics/log/core/firewallmap/*</pattern>
             <pattern>api/diagnostics/log/core/firewallmap/*</pattern>
         </patterns>

@@ -48,10 +48,10 @@
         const describeKeys = function () {
             ajaxGet('/api/firewallmap/settings/status', {}, function (data) {
                 status = data || {};
-                // lang._() returns HTML-escaped text and .attr() takes plain text: decode once
+                // fwlang._() returns HTML-escaped text and .attr() takes plain text: decode once
                 const plain = (html) => $('<textarea/>').html(html).text();
-                const stored = plain({{ lang._('A key is stored')|json_encode }});
-                const alias = plain({{ lang._('Using the key of the GeoIP alias')|json_encode }});
+                const stored = plain({{ fwlang._('A key is stored')|json_encode }});
+                const alias = plain({{ fwlang._('Using the key of the GeoIP alias')|json_encode }});
                 keyField('license_key').attr('placeholder', status.license_key_set ? stored
                     : (status.database && status.database.key_source === 'alias' ? alias : ''));
                 keyField('abuseipdb_key').attr('placeholder', status.abuseipdb_configured ? stored : '');
@@ -107,13 +107,13 @@
                             });
                         },
                         title: (cell) => cell.getData().active === '1'
-                            ? {{ lang._('Active profile')|json_encode }} : {{ lang._('Activate')|json_encode }}
+                            ? {{ fwlang._('Active profile')|json_encode }} : {{ fwlang._('Activate')|json_encode }}
                     },
                     // a built-in is shown read only (OPNsense's info command), a custom one edited
                     info: {
                         requires: [],
                         classname: 'fa fa-fw fa-info-circle',
-                        title: {{ lang._('View')|json_encode }},
+                        title: {{ fwlang._('View')|json_encode }},
                         sequence: 90,
                         filter: (cell) => cell.getData().builtin === '1',
                         method: function () {
@@ -129,7 +129,7 @@
                     rowSelect: false,
                     formatters: {
                         profile_type: (column, row) => escape(row.builtin === '1'
-                            ? {{ lang._('Built-in')|json_encode }} : {{ lang._('Custom')|json_encode }})
+                            ? {{ fwlang._('Built-in')|json_encode }} : {{ fwlang._('Custom')|json_encode }})
                     }
                 }
             });
@@ -171,22 +171,22 @@
         const profileSave = $("#btn_{{ formGridProfile['edit_dialog_id'] }}_save");
         const profileField = (key) => $(`#profile\\.${key}`);
         const PROFILE_TEXT = {
-            general: {{ lang._('General ranking')|json_encode }},
-            general_short: {{ lang._('General')|json_encode }},
-            shorts: [{{ lang._('Data')|json_encode }}, {{ lang._('Packets')|json_encode }}, {{ lang._('Conns')|json_encode }},
-                {{ lang._('Conn/s')|json_encode }}, {{ lang._('Total')|json_encode }}, {{ lang._('Blocked')|json_encode }},
-                {{ lang._('Threat')|json_encode }}, {{ lang._('IDS')|json_encode }}],
-            unreserved: {{ lang._('General ranking (unreserved): %s%')|json_encode }},
-            over: {{ lang._('Over-allocated by %s%')|json_encode }},
-            bad: {{ lang._('Enter whole percentages from 0 to 100.')|json_encode }},
-            total: {{ lang._('Total: %s%')|json_encode }},
-            remaining: {{ lang._('Total: %s% (%s% remaining)')|json_encode }},
-            exceeded: {{ lang._('Total: %s% (%s% over)')|json_encode }},
-            traffic: {{ lang._('Traffic behavior')|json_encode }},
-            evidence: {{ lang._('Security evidence')|json_encode }},
-            security_intro: {{ lang._('S1, S2 and S3 reserve a minimum share of the places on the map for security flows, filled from the most severe class down. Unused reserved places return to general ranking, and security flows can take more than their share when their ranking score is high enough. The shares scale with Maximum flows on the map, rounded up per class.')|json_encode }},
-            ranking_intro: {{ lang._('How flows are scored against one another, security flows included. A higher percentage gives that property more influence on which flows appear on the map. The priorities total exactly 100.')|json_encode }},
-            ranking_drag: {{ lang._('Drag a boundary to move points between its two neighbours.')|json_encode }}
+            general: {{ fwlang._('General ranking')|json_encode }},
+            general_short: {{ fwlang._('General')|json_encode }},
+            shorts: [{{ fwlang._('Data')|json_encode }}, {{ fwlang._('Packets')|json_encode }}, {{ fwlang._('Conns')|json_encode }},
+                {{ fwlang._('Conn/s')|json_encode }}, {{ fwlang._('Total')|json_encode }}, {{ fwlang._('Blocked')|json_encode }},
+                {{ fwlang._('Threat')|json_encode }}, {{ fwlang._('IDS')|json_encode }}],
+            unreserved: {{ fwlang._('General ranking (unreserved): %s%')|json_encode }},
+            over: {{ fwlang._('Over-allocated by %s%')|json_encode }},
+            bad: {{ fwlang._('Enter whole percentages from 0 to 100.')|json_encode }},
+            total: {{ fwlang._('Total: %s%')|json_encode }},
+            remaining: {{ fwlang._('Total: %s% (%s% remaining)')|json_encode }},
+            exceeded: {{ fwlang._('Total: %s% (%s% over)')|json_encode }},
+            traffic: {{ fwlang._('Traffic behavior')|json_encode }},
+            evidence: {{ fwlang._('Security evidence')|json_encode }},
+            security_intro: {{ fwlang._('S1, S2 and S3 reserve a minimum share of the places on the map for security flows, filled from the most severe class down. Unused reserved places return to general ranking, and security flows can take more than their share when their ranking score is high enough. The shares scale with Maximum flows on the map, rounded up per class.')|json_encode }},
+            ranking_intro: {{ fwlang._('How flows are scored against one another, security flows included. A higher percentage gives that property more influence on which flows appear on the map. The priorities total exactly 100.')|json_encode }},
+            ranking_drag: {{ fwlang._('Drag a boundary to move points between its two neighbours.')|json_encode }}
         };
         const fill = (template, ...values) => values.reduce((text, value) => text.replace('%s', value), template);
         // the field's row becomes a compact cell: its label, input, help and validation message
@@ -260,7 +260,7 @@
         const profileTitle = profileDialog.find('.modal-title');
         const editTitle = profileTitle.text();
         const cloneButton = $('<button type="button" class="btn btn-primary hidden"/>')
-            .text({{ lang._('Clone to edit')|json_encode }}).insertAfter(profileSave);
+            .text({{ fwlang._('Clone to edit')|json_encode }}).insertAfter(profileSave);
         let viewed = null;
         const viewProfile = (uuid) => {
             ajaxGet(`/api/firewallmap/profiles/get_item/${uuid}`, {}, (data) => {
@@ -273,7 +273,7 @@
                 dragHint.addClass('hidden');
                 security.refresh();
                 ranking.refresh();
-                profileTitle.text(fill({{ lang._('Ranking profile: %s (built-in)')|json_encode }}, data.profile.name));
+                profileTitle.text(fill({{ fwlang._('Ranking profile: %s (built-in)')|json_encode }}, data.profile.name));
                 profileSave.addClass('hidden');
                 cloneButton.removeClass('hidden');
                 profileDialog.modal('show');
@@ -383,13 +383,13 @@
 
 <div class="alert alert-warning hidden" role="alert" id="classificationWarning">
     <i class="fa fa-triangle-exclamation fa-fw"></i>
-    {{ lang._('Not used, because they have no PF table:') }} <strong class="names"></strong>.
-    {{ lang._('Enable Maintain blocklist aliases (Security tab) for the curated feeds and the AbuseIPDB blacklist, or create the aliases.') }}
+    {{ fwlang._('Not used, because they have no PF table:') }} <strong class="names"></strong>.
+    {{ fwlang._('Enable Maintain blocklist aliases (Security tab) for the curated feeds and the AbuseIPDB blacklist, or create the aliases.') }}
 </div>
 
 <ul class="nav nav-tabs" role="tablist" id="maintabs">
     {{ partial('layout_partials/base_tabs_header', ['formData': formSettings]) }}
-    <li><a data-toggle="tab" href="#tab_profiles">{{ lang._('Profiles') }}</a></li>
+    <li><a data-toggle="tab" href="#tab_profiles">{{ fwlang._('Profiles') }}</a></li>
 </ul>
 
 <div class="tab-content content-box" id="settings_tabs">
@@ -404,4 +404,17 @@
 </div>
 
 {{ partial('layout_partials/base_apply_button', {'data_endpoint': '/api/firewallmap/service/reconfigure', 'data_service_widget': 'firewallmap'}) }}
-{{ partial('layout_partials/base_dialog', ['fields': formDialogProfile, 'id': formGridProfile['edit_dialog_id'], 'label': lang._('Edit ranking profile')]) }}
+{{ partial('layout_partials/base_dialog', ['fields': formDialogProfile, 'id': formGridProfile['edit_dialog_id'], 'label': fwlang._('Edit ranking profile')]) }}
+
+<script>
+$(function () {
+    const label = {{ fwlang._('Map')|json_encode }};
+    document.querySelectorAll('a[href="/ui/firewallmap"]').forEach(function (link) {
+        const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+            if (node.textContent.trim() === 'Map') node.textContent = node.textContent.replace('Map', label);
+        }
+    });
+});
+</script>

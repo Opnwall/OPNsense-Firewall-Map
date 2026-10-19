@@ -26,7 +26,7 @@
 
 <script>
     $(document).ready(function () {
-        // lang._() returns HTML-escaped text and the page escapes again where it builds HTML: decode
+        // fwlang._() returns HTML-escaped text and the page escapes again where it builds HTML: decode
         // once here (json_encode makes each a valid JavaScript string)
         const plain = function (strings) {
             const box = document.createElement('textarea');
@@ -37,107 +37,107 @@
             return strings;
         };
         const T = plain({
-            running_live: {{ lang._('Running: a map is open')|json_encode }},
-            running_background: {{ lang._('Running: recording threats in the background')|json_encode }},
-            stopped: {{ lang._('Stopped: starts when a map is opened')|json_encode }},
-            recording_on: {{ lang._('On')|json_encode }},
-            recording_no_widget: {{ lang._('On, but no dashboard has the Firewall Map widget')|json_encode }},
-            recording_off: {{ lang._('Off')|json_encode }},
-            never: {{ lang._('never')|json_encode }},
-            ago: {{ lang._('%s ago')|json_encode }},
-            in: {{ lang._('in %s')|json_encode }},
-            built: {{ lang._('built %s')|json_encode }},
-            missing: {{ lang._('not downloaded')|json_encode }},
-            downloading: {{ lang._('Downloading…')|json_encode }},
-            ok: {{ lang._('OK')|json_encode }},
-            list_missing: {{ lang._('no PF table: the alias does not exist or is not loaded')|json_encode }},
-            list_too_large: {{ lang._('too large: over 500,000 entries, or past 1,000,000 across all lists')|json_encode }},
-            list_unreadable: {{ lang._('the PF table could not be read')|json_encode }},
-            list_pending: {{ lang._('not read yet')|json_encode }},
-            list_unavailable: {{ lang._('Not used: no PF table. Enable Maintain blocklist aliases in the settings, or create the alias.')|json_encode }},
-            lists_none: {{ lang._('No threat lists: choose them in the settings.')|json_encode }},
-            sets_none: {{ lang._('No country or operational sets: choose them in the settings.')|json_encode }},
-            lists_title: {{ lang._('a threat list')|json_encode }},
-            set_country: {{ lang._('Country')|json_encode }},
-            set_operational: {{ lang._('Operational')|json_encode }},
-            set_missing: {{ lang._('Not used: no PF table (the alias does not exist or is not loaded)')|json_encode }},
-            set_duplicate: {{ lang._('Chosen in more than one category: used as %s only')|json_encode }},
-            set_broad: {{ lang._('Broad: contains %s of the %s ranked flows')|json_encode }},
-            set_matched: {{ lang._('%s of %s ranked flows')|json_encode }},
-            sets_ignored: {{ lang._('Over the limit of 64 tables, not used: %s')|json_encode }},
-            profile_builtin: {{ lang._('built-in')|json_encode }},
-            profile_custom: {{ lang._('custom')|json_encode }},
-            profile_details: {{ lang._('UUID %s · definition %s')|json_encode }},
-            generations: {{ lang._('collector %s · classification %s')|json_encode }},
-            cadence: {{ lang._('Every %s s (the collector recommends %s s: %s); limits %s–%s s')|json_encode }},
-            cadence_floor: {{ lang._('samples are quick')|json_encode }},
-            cadence_duty: {{ lang._('keeps sampling to about 10% of the time')|json_encode }},
-            cadence_memory: {{ lang._('memory is close to the budget')|json_encode }},
-            cadence_refused: {{ lang._('the last sample was refused')|json_encode }},
-            evidence_unavailable: {{ lang._('Not available: %s does not exist')|json_encode }},
-            evidence_blocks: {{ lang._('%s sources in the last %s (at most %s); only rules with logging enabled are seen')|json_encode }},
-            evidence_ids: {{ lang._('%s sources in the last %s (at most %s)')|json_encode }},
-            evidence_reputation: {{ lang._('%s addresses rated abusive by an AbuseIPDB lookup')|json_encode }},
-            evidence_remotes: {{ lang._('%s remotes with evidence sent to the collector (at most %s), %s left out')|json_encode }},
-            no_key: {{ lang._('No AbuseIPDB API key')|json_encode }},
-            key_plugin: {{ lang._('Stored in the Firewall Map settings')|json_encode }},
-            key_alias: {{ lang._('Taken from the GeoIP alias')|json_encode }},
-            key_none: {{ lang._('None')|json_encode }},
-            key_unused: {{ lang._('Not needed')|json_encode }},
-            entries: {{ lang._('%s entries')|json_encode }},
-            started: {{ lang._('Download started')|json_encode }},
-            unavailable: {{ lang._('The status could not be read. Trying again shortly.')|json_encode }},
-            update_failed: {{ lang._('The download could not be started.')|json_encode }},
-            standin: {{ lang._('%s standing in while the download fails')|json_encode }},
-            seconds: {{ lang._('%s s')|json_encode }},
-            minutes: {{ lang._('%s min')|json_encode }},
-            hours: {{ lang._('%s h')|json_encode }},
-            days: {{ lang._('%s days')|json_encode }},
-            sample: {{ lang._('%s ms (CPU %s ms)')|json_encode }},
-            engine_helper: {{ lang._('Process %s, started %s times; built for PF state ABI %s')|json_encode }},
-            engine_version_warning: {{ lang._('Built on FreeBSD %s, running %s: compatibility is decided by the PF state check')|json_encode }},
-            engine_limit: {{ lang._('Up to %s states (memory budget %s)')|json_encode }},
-            engine_tracking: {{ lang._('%s: %s of up to %s flows tracked, %s flows in all')|json_encode }},
-            engine_ranked: {{ lang._('%s of up to %s ranked flows sent each sample')|json_encode }},
-            home_accuracy: {{ lang._('within %s km')|json_encode }},
-            home_coordinates: {{ lang._('from the coordinates in the settings')|json_encode }},
-            home_ipv4_wan: {{ lang._('from the WAN address %s')|json_encode }},
-            home_external_ip: {{ lang._('from the discovered public address %s')|json_encode }},
-            home_ipv4: {{ lang._('from the address %s')|json_encode }},
-            home_ipv6_inside: {{ lang._('from the inside IPv6 address %s')|json_encode }},
-            home_ipv6_wan: {{ lang._('from the WAN IPv6 address %s')|json_encode }},
-            home_approximate: {{ lang._('approximate, from %s (no precise location)')|json_encode }},
-            engine_quality: {{ lang._('discovery %s, ranking %s, attribution %s')|json_encode }},
-            regime_exact: {{ lang._('Every flow tracked')|json_encode }},
-            regime_bounded: {{ lang._('Bounded')|json_encode }},
-            quality_exact: {{ lang._('exact')|json_encode }},
-            quality_bounded: {{ lang._('bounded')|json_encode }},
-            quality_warming: {{ lang._('warming')|json_encode }},
-            quality_partial: {{ lang._('partial')|json_encode }},
-            engine_sample: {{ lang._('%s states: PF read %s ms, processing %s ms, memory peak %s')|json_encode }},
-            engine_baseline: {{ lang._('first sample of this process: no rates yet')|json_encode }},
-            engine_omitted: {{ lang._('%s states skipped (unsupported address-family translation), %s candidates and %s threat remotes over their budgets, %s recent tuples evicted')|json_encode }},
-            engine_rejected: {{ lang._('%s filter log and %s IDS lines rejected')|json_encode }},
-            lifetimes: {{ lang._('Invalid PF state lifetimes skipped: %s of %s PF records (no state can last longer than %s s)')|json_encode }},
-            lifetimes_unavailable: {{ lang._('Not validated: the PF timeouts could not be read (error %s), so every PF state is kept')|json_encode }},
-            ages_unknown: {{ lang._('%s states with an age PF cannot have measured: shown without an age')|json_encode }},
-            classifier_current: {{ lang._('Current: the last build needed %s of its %s bound; the snapshot takes %s')|json_encode }},
-            classifier_stale: {{ lang._('Refresh failed (error %s): the previous PF table snapshot stays in use until a refresh succeeds')|json_encode }},
-            engine_refused: {{ lang._('Last sample refused: %s')|json_encode }},
-            engine_incompatible: {{ lang._('Incompatible with this firewall: %s')|json_encode }},
-            engine_protocol_mismatch: {{ lang._('Firewall Map collector incompatible — The Firewall Map application and its state collector use incompatible protocols. Reinstall or upgrade the Firewall Map package so both components come from the same version.')|json_encode }},
-            reason_protocol: {{ lang._('Protocol mismatch')|json_encode }},
-            reason_pf_abi: {{ lang._('PF ABI mismatch')|json_encode }},
-            collector_running: {{ lang._('Running')|json_encode }},
-            collector_incompatible: {{ lang._('Incompatible')|json_encode }},
-            collector_failed: {{ lang._('Failed')|json_encode }},
-            collector_starting: {{ lang._('Starting')|json_encode }},
-            collector_stopped: {{ lang._('Not running')|json_encode }},
-            unknown: {{ lang._('unknown')|json_encode }},
-            none: {{ lang._('none')|json_encode }},
+            running_live: {{ fwlang._('Running: a map is open')|json_encode }},
+            running_background: {{ fwlang._('Running: recording threats in the background')|json_encode }},
+            stopped: {{ fwlang._('Stopped: starts when a map is opened')|json_encode }},
+            recording_on: {{ fwlang._('On')|json_encode }},
+            recording_no_widget: {{ fwlang._('On, but no dashboard has the Firewall Map widget')|json_encode }},
+            recording_off: {{ fwlang._('Off')|json_encode }},
+            never: {{ fwlang._('never')|json_encode }},
+            ago: {{ fwlang._('%s ago')|json_encode }},
+            in: {{ fwlang._('in %s')|json_encode }},
+            built: {{ fwlang._('built %s')|json_encode }},
+            missing: {{ fwlang._('not downloaded')|json_encode }},
+            downloading: {{ fwlang._('Downloading…')|json_encode }},
+            ok: {{ fwlang._('OK')|json_encode }},
+            list_missing: {{ fwlang._('no PF table: the alias does not exist or is not loaded')|json_encode }},
+            list_too_large: {{ fwlang._('too large: over 500,000 entries, or past 1,000,000 across all lists')|json_encode }},
+            list_unreadable: {{ fwlang._('the PF table could not be read')|json_encode }},
+            list_pending: {{ fwlang._('not read yet')|json_encode }},
+            list_unavailable: {{ fwlang._('Not used: no PF table. Enable Maintain blocklist aliases in the settings, or create the alias.')|json_encode }},
+            lists_none: {{ fwlang._('No threat lists: choose them in the settings.')|json_encode }},
+            sets_none: {{ fwlang._('No country or operational sets: choose them in the settings.')|json_encode }},
+            lists_title: {{ fwlang._('a threat list')|json_encode }},
+            set_country: {{ fwlang._('Country')|json_encode }},
+            set_operational: {{ fwlang._('Operational')|json_encode }},
+            set_missing: {{ fwlang._('Not used: no PF table (the alias does not exist or is not loaded)')|json_encode }},
+            set_duplicate: {{ fwlang._('Chosen in more than one category: used as %s only')|json_encode }},
+            set_broad: {{ fwlang._('Broad: contains %s of the %s ranked flows')|json_encode }},
+            set_matched: {{ fwlang._('%s of %s ranked flows')|json_encode }},
+            sets_ignored: {{ fwlang._('Over the limit of 64 tables, not used: %s')|json_encode }},
+            profile_builtin: {{ fwlang._('built-in')|json_encode }},
+            profile_custom: {{ fwlang._('custom')|json_encode }},
+            profile_details: {{ fwlang._('UUID %s · definition %s')|json_encode }},
+            generations: {{ fwlang._('collector %s · classification %s')|json_encode }},
+            cadence: {{ fwlang._('Every %s s (the collector recommends %s s: %s); limits %s–%s s')|json_encode }},
+            cadence_floor: {{ fwlang._('samples are quick')|json_encode }},
+            cadence_duty: {{ fwlang._('keeps sampling to about 10% of the time')|json_encode }},
+            cadence_memory: {{ fwlang._('memory is close to the budget')|json_encode }},
+            cadence_refused: {{ fwlang._('the last sample was refused')|json_encode }},
+            evidence_unavailable: {{ fwlang._('Not available: %s does not exist')|json_encode }},
+            evidence_blocks: {{ fwlang._('%s sources in the last %s (at most %s); only rules with logging enabled are seen')|json_encode }},
+            evidence_ids: {{ fwlang._('%s sources in the last %s (at most %s)')|json_encode }},
+            evidence_reputation: {{ fwlang._('%s addresses rated abusive by an AbuseIPDB lookup')|json_encode }},
+            evidence_remotes: {{ fwlang._('%s remotes with evidence sent to the collector (at most %s), %s left out')|json_encode }},
+            no_key: {{ fwlang._('No AbuseIPDB API key')|json_encode }},
+            key_plugin: {{ fwlang._('Stored in the Firewall Map settings')|json_encode }},
+            key_alias: {{ fwlang._('Taken from the GeoIP alias')|json_encode }},
+            key_none: {{ fwlang._('None')|json_encode }},
+            key_unused: {{ fwlang._('Not needed')|json_encode }},
+            entries: {{ fwlang._('%s entries')|json_encode }},
+            started: {{ fwlang._('Download started')|json_encode }},
+            unavailable: {{ fwlang._('The status could not be read. Trying again shortly.')|json_encode }},
+            update_failed: {{ fwlang._('The download could not be started.')|json_encode }},
+            standin: {{ fwlang._('%s standing in while the download fails')|json_encode }},
+            seconds: {{ fwlang._('%s s')|json_encode }},
+            minutes: {{ fwlang._('%s min')|json_encode }},
+            hours: {{ fwlang._('%s h')|json_encode }},
+            days: {{ fwlang._('%s days')|json_encode }},
+            sample: {{ fwlang._('%s ms (CPU %s ms)')|json_encode }},
+            engine_helper: {{ fwlang._('Process %s, started %s times; built for PF state ABI %s')|json_encode }},
+            engine_version_warning: {{ fwlang._('Built on FreeBSD %s, running %s: compatibility is decided by the PF state check')|json_encode }},
+            engine_limit: {{ fwlang._('Up to %s states (memory budget %s)')|json_encode }},
+            engine_tracking: {{ fwlang._('%s: %s of up to %s flows tracked, %s flows in all')|json_encode }},
+            engine_ranked: {{ fwlang._('%s of up to %s ranked flows sent each sample')|json_encode }},
+            home_accuracy: {{ fwlang._('within %s km')|json_encode }},
+            home_coordinates: {{ fwlang._('from the coordinates in the settings')|json_encode }},
+            home_ipv4_wan: {{ fwlang._('from the WAN address %s')|json_encode }},
+            home_external_ip: {{ fwlang._('from the discovered public address %s')|json_encode }},
+            home_ipv4: {{ fwlang._('from the address %s')|json_encode }},
+            home_ipv6_inside: {{ fwlang._('from the inside IPv6 address %s')|json_encode }},
+            home_ipv6_wan: {{ fwlang._('from the WAN IPv6 address %s')|json_encode }},
+            home_approximate: {{ fwlang._('approximate, from %s (no precise location)')|json_encode }},
+            engine_quality: {{ fwlang._('discovery %s, ranking %s, attribution %s')|json_encode }},
+            regime_exact: {{ fwlang._('Every flow tracked')|json_encode }},
+            regime_bounded: {{ fwlang._('Bounded')|json_encode }},
+            quality_exact: {{ fwlang._('exact')|json_encode }},
+            quality_bounded: {{ fwlang._('bounded')|json_encode }},
+            quality_warming: {{ fwlang._('warming')|json_encode }},
+            quality_partial: {{ fwlang._('partial')|json_encode }},
+            engine_sample: {{ fwlang._('%s states: PF read %s ms, processing %s ms, memory peak %s')|json_encode }},
+            engine_baseline: {{ fwlang._('first sample of this process: no rates yet')|json_encode }},
+            engine_omitted: {{ fwlang._('%s states skipped (unsupported address-family translation), %s candidates and %s threat remotes over their budgets, %s recent tuples evicted')|json_encode }},
+            engine_rejected: {{ fwlang._('%s filter log and %s IDS lines rejected')|json_encode }},
+            lifetimes: {{ fwlang._('Invalid PF state lifetimes skipped: %s of %s PF records (no state can last longer than %s s)')|json_encode }},
+            lifetimes_unavailable: {{ fwlang._('Not validated: the PF timeouts could not be read (error %s), so every PF state is kept')|json_encode }},
+            ages_unknown: {{ fwlang._('%s states with an age PF cannot have measured: shown without an age')|json_encode }},
+            classifier_current: {{ fwlang._('Current: the last build needed %s of its %s bound; the snapshot takes %s')|json_encode }},
+            classifier_stale: {{ fwlang._('Refresh failed (error %s): the previous PF table snapshot stays in use until a refresh succeeds')|json_encode }},
+            engine_refused: {{ fwlang._('Last sample refused: %s')|json_encode }},
+            engine_incompatible: {{ fwlang._('Incompatible with this firewall: %s')|json_encode }},
+            engine_protocol_mismatch: {{ fwlang._('Firewall Map collector incompatible — The Firewall Map application and its state collector use incompatible protocols. Reinstall or upgrade the Firewall Map package so both components come from the same version.')|json_encode }},
+            reason_protocol: {{ fwlang._('Protocol mismatch')|json_encode }},
+            reason_pf_abi: {{ fwlang._('PF ABI mismatch')|json_encode }},
+            collector_running: {{ fwlang._('Running')|json_encode }},
+            collector_incompatible: {{ fwlang._('Incompatible')|json_encode }},
+            collector_failed: {{ fwlang._('Failed')|json_encode }},
+            collector_starting: {{ fwlang._('Starting')|json_encode }},
+            collector_stopped: {{ fwlang._('Not running')|json_encode }},
+            unknown: {{ fwlang._('unknown')|json_encode }},
+            none: {{ fwlang._('none')|json_encode }},
         });
         const PROVIDERS = plain({
-            auto: {{ lang._('Automatic')|json_encode }}, maxmind: 'MaxMind GeoLite2', maxmind_paid: 'MaxMind GeoIP2 City', dbip: 'DB-IP Lite',
+            auto: {{ fwlang._('Automatic')|json_encode }}, maxmind: 'MaxMind GeoLite2', maxmind_paid: 'MaxMind GeoIP2 City', dbip: 'DB-IP Lite',
         });
         const escape = (text) => $('<div/>').text(text === null || text === undefined ? '' : String(text)).html();
         const duration = (seconds) => {
@@ -367,96 +367,109 @@
 
 <div class="content-box __mb">
     <table class="table table-condensed">
-        <thead><tr><th colspan="2">{{ lang._('Collector') }}</th></tr></thead>
+        <thead><tr><th colspan="2">{{ fwlang._('Collector') }}</th></tr></thead>
         <tbody>
-            <tr><td style="width: 25%;">{{ lang._('Firewall Map version') }}</td><td id="version"></td></tr>
-            <tr><td>{{ lang._('Status') }}</td><td id="collector-status"></td></tr>
-            <tr><td>{{ lang._('Last map update') }}</td><td id="collector-update"></td></tr>
-            <tr><td>{{ lang._('Background recording') }}</td><td id="collector-recording"></td></tr>
-            <tr><td>{{ lang._('Last sample') }}</td><td id="collector-sample"></td></tr>
+            <tr><td style="width: 25%;">{{ fwlang._('Firewall Map version') }}</td><td id="version"></td></tr>
+            <tr><td>{{ fwlang._('Status') }}</td><td id="collector-status"></td></tr>
+            <tr><td>{{ fwlang._('Last map update') }}</td><td id="collector-update"></td></tr>
+            <tr><td>{{ fwlang._('Background recording') }}</td><td id="collector-recording"></td></tr>
+            <tr><td>{{ fwlang._('Last sample') }}</td><td id="collector-sample"></td></tr>
         </tbody>
     </table>
 </div>
 
 <div class="content-box __mb">
     <table class="table table-condensed">
-        <thead><tr><th colspan="2">{{ lang._('State collector') }}</th></tr></thead>
+        <thead><tr><th colspan="2">{{ fwlang._('State collector') }}</th></tr></thead>
         <tbody>
-            <tr><td style="width: 25%;">{{ lang._('State collector') }}</td><td id="engine-state"></td></tr>
-            <tr><td>{{ lang._('Collector protocol') }}</td><td id="engine-protocol"></td></tr>
-            <tr><td>{{ lang._('Expected protocol') }}</td><td id="engine-expected-protocol"></td></tr>
-            <tr class="hidden"><td>{{ lang._('Reason') }}</td><td id="engine-reason"></td></tr>
-            <tr class="hidden"><td>{{ lang._('Collector PF state version') }}</td><td id="engine-collector-pf"></td></tr>
-            <tr class="hidden"><td>{{ lang._('Running PF state version') }}</td><td id="engine-running-pf"></td></tr>
-            <tr><td>{{ lang._('Process') }}</td><td id="engine-helper"></td></tr>
-            <tr><td>{{ lang._('State limit') }}</td><td id="engine-limit"></td></tr>
-            <tr><td>{{ lang._('Last collector sample') }}</td><td id="engine-sample"></td></tr>
-            <tr><td>{{ lang._('Flows') }}</td><td id="engine-tracking"></td></tr>
-            <tr><td>{{ lang._('Flows on the map') }}</td><td id="engine-ranked"></td></tr>
-            <tr><td>{{ lang._('Left out') }}</td><td id="engine-omitted"></td></tr>
-            <tr><td>{{ lang._('PF state lifetimes') }}</td><td id="engine-lifetimes"></td></tr>
-            <tr><td>{{ lang._('Classification snapshot') }}</td><td id="engine-classifier"></td></tr>
-            <tr><td>{{ lang._('Rejected log lines') }}</td><td id="engine-rejected"></td></tr>
-            <tr><td>{{ lang._('Ranking profile') }}</td><td id="engine-profile"></td></tr>
-            <tr><td>{{ lang._('Generations') }}</td><td id="engine-generations"></td></tr>
-            <tr><td>{{ lang._('Refresh interval') }}</td><td id="engine-cadence"></td></tr>
-            <tr><td>{{ lang._('Problems') }}</td><td id="engine-problem"></td></tr>
+            <tr><td style="width: 25%;">{{ fwlang._('State collector') }}</td><td id="engine-state"></td></tr>
+            <tr><td>{{ fwlang._('Collector protocol') }}</td><td id="engine-protocol"></td></tr>
+            <tr><td>{{ fwlang._('Expected protocol') }}</td><td id="engine-expected-protocol"></td></tr>
+            <tr class="hidden"><td>{{ fwlang._('Reason') }}</td><td id="engine-reason"></td></tr>
+            <tr class="hidden"><td>{{ fwlang._('Collector PF state version') }}</td><td id="engine-collector-pf"></td></tr>
+            <tr class="hidden"><td>{{ fwlang._('Running PF state version') }}</td><td id="engine-running-pf"></td></tr>
+            <tr><td>{{ fwlang._('Process') }}</td><td id="engine-helper"></td></tr>
+            <tr><td>{{ fwlang._('State limit') }}</td><td id="engine-limit"></td></tr>
+            <tr><td>{{ fwlang._('Last collector sample') }}</td><td id="engine-sample"></td></tr>
+            <tr><td>{{ fwlang._('Flows') }}</td><td id="engine-tracking"></td></tr>
+            <tr><td>{{ fwlang._('Flows on the map') }}</td><td id="engine-ranked"></td></tr>
+            <tr><td>{{ fwlang._('Left out') }}</td><td id="engine-omitted"></td></tr>
+            <tr><td>{{ fwlang._('PF state lifetimes') }}</td><td id="engine-lifetimes"></td></tr>
+            <tr><td>{{ fwlang._('Classification snapshot') }}</td><td id="engine-classifier"></td></tr>
+            <tr><td>{{ fwlang._('Rejected log lines') }}</td><td id="engine-rejected"></td></tr>
+            <tr><td>{{ fwlang._('Ranking profile') }}</td><td id="engine-profile"></td></tr>
+            <tr><td>{{ fwlang._('Generations') }}</td><td id="engine-generations"></td></tr>
+            <tr><td>{{ fwlang._('Refresh interval') }}</td><td id="engine-cadence"></td></tr>
+            <tr><td>{{ fwlang._('Problems') }}</td><td id="engine-problem"></td></tr>
         </tbody>
     </table>
 </div>
 
 <div class="content-box __mb">
     <table class="table table-condensed">
-        <thead><tr><th>{{ lang._('Geolocation database') }}</th>
-            <th class="text-right"><button type="button" class="btn btn-default btn-xs update-now" id="update-geodb" data-what="geodb"><i class="fa fa-download fa-fw"></i> {{ lang._('Update now') }}</button></th></tr></thead>
+        <thead><tr><th>{{ fwlang._('Geolocation database') }}</th>
+            <th class="text-right"><button type="button" class="btn btn-default btn-xs update-now" id="update-geodb" data-what="geodb"><i class="fa fa-download fa-fw"></i> {{ fwlang._('Update now') }}</button></th></tr></thead>
         <tbody>
-            <tr><td style="width: 25%;">{{ lang._('Service') }}</td><td id="geo-provider"></td></tr>
-            <tr><td>{{ lang._('License key') }}</td><td id="geo-key"></td></tr>
-            <tr><td>{{ lang._('Firewall location') }}</td><td id="geo-home"></td></tr>
-            <tr><td>{{ lang._('Locations') }}</td><td id="geo-city"></td></tr>
-            <tr><td>{{ lang._('Networks') }}</td><td id="geo-asn"></td></tr>
-            <tr><td>{{ lang._('Next update') }}</td><td id="geo-next"></td></tr>
-            <tr><td>{{ lang._('Last download') }}</td><td id="geo-state"></td></tr>
+            <tr><td style="width: 25%;">{{ fwlang._('Service') }}</td><td id="geo-provider"></td></tr>
+            <tr><td>{{ fwlang._('License key') }}</td><td id="geo-key"></td></tr>
+            <tr><td>{{ fwlang._('Firewall location') }}</td><td id="geo-home"></td></tr>
+            <tr><td>{{ fwlang._('Locations') }}</td><td id="geo-city"></td></tr>
+            <tr><td>{{ fwlang._('Networks') }}</td><td id="geo-asn"></td></tr>
+            <tr><td>{{ fwlang._('Next update') }}</td><td id="geo-next"></td></tr>
+            <tr><td>{{ fwlang._('Last download') }}</td><td id="geo-state"></td></tr>
         </tbody>
     </table>
 </div>
 
 <div class="content-box __mb">
     <table class="table table-condensed">
-        <thead><tr><th style="width: 25%;">{{ lang._('Threat lists') }}</th><th>{{ lang._('Entries') }}</th>
-            <th class="text-right"><button type="button" class="btn btn-default btn-xs update-now" id="update-lists" data-what="lists"><i class="fa fa-download fa-fw"></i> {{ lang._('Update now') }}</button></th></tr></thead>
+        <thead><tr><th style="width: 25%;">{{ fwlang._('Threat lists') }}</th><th>{{ fwlang._('Entries') }}</th>
+            <th class="text-right"><button type="button" class="btn btn-default btn-xs update-now" id="update-lists" data-what="lists"><i class="fa fa-download fa-fw"></i> {{ fwlang._('Update now') }}</button></th></tr></thead>
         <tbody id="threat-lists"></tbody>
     </table>
 </div>
 
 <div class="content-box __mb">
     <table class="table table-condensed">
-        <thead><tr><th style="width: 25%;">{{ lang._('Country and operational sets') }}</th><th>{{ lang._('Entries') }}</th><th></th></tr></thead>
+        <thead><tr><th style="width: 25%;">{{ fwlang._('Country and operational sets') }}</th><th>{{ fwlang._('Entries') }}</th><th></th></tr></thead>
         <tbody id="class-sets"></tbody>
     </table>
 </div>
 
 <div class="content-box __mb">
     <table class="table table-condensed">
-        <thead><tr><th colspan="2">{{ lang._('Security evidence') }}</th></tr></thead>
+        <thead><tr><th colspan="2">{{ fwlang._('Security evidence') }}</th></tr></thead>
         <tbody>
-            <tr><td style="width: 25%;">{{ lang._('Logged blocks') }}</td><td id="evidence-blocks"></td></tr>
-            <tr><td>{{ lang._('IDS alerts') }}</td><td id="evidence-ids"></td></tr>
-            <tr><td>{{ lang._('Reputation') }}</td><td id="evidence-reputation"></td></tr>
-            <tr><td>{{ lang._('Sent to the collector') }}</td><td id="evidence-remotes"></td></tr>
+            <tr><td style="width: 25%;">{{ fwlang._('Logged blocks') }}</td><td id="evidence-blocks"></td></tr>
+            <tr><td>{{ fwlang._('IDS alerts') }}</td><td id="evidence-ids"></td></tr>
+            <tr><td>{{ fwlang._('Reputation') }}</td><td id="evidence-reputation"></td></tr>
+            <tr><td>{{ fwlang._('Sent to the collector') }}</td><td id="evidence-remotes"></td></tr>
         </tbody>
     </table>
 </div>
 
 <div class="content-box">
     <table class="table table-condensed">
-        <thead><tr><th>{{ lang._('AbuseIPDB blacklist') }}</th>
-            <th class="text-right"><button type="button" class="btn btn-default btn-xs update-now" id="update-abuseipdb" data-what="abuseipdb"><i class="fa fa-download fa-fw"></i> {{ lang._('Download now') }}</button></th></tr></thead>
+        <thead><tr><th>{{ fwlang._('AbuseIPDB blacklist') }}</th>
+            <th class="text-right"><button type="button" class="btn btn-default btn-xs update-now" id="update-abuseipdb" data-what="abuseipdb"><i class="fa fa-download fa-fw"></i> {{ fwlang._('Download now') }}</button></th></tr></thead>
         <tbody>
-            <tr><td style="width: 25%;">{{ lang._('Entries') }}</td><td id="abuse-count"></td></tr>
-            <tr><td>{{ lang._('Updated') }}</td><td id="abuse-updated"></td></tr>
-            <tr><td>{{ lang._('Last download') }}</td><td id="abuse-state"></td></tr>
-            <tr><td colspan="2" class="text-muted">{{ lang._('Downloaded once a day. The free AbuseIPDB plan allows only a few downloads a day, so use Download now sparingly.') }}</td></tr>
+            <tr><td style="width: 25%;">{{ fwlang._('Entries') }}</td><td id="abuse-count"></td></tr>
+            <tr><td>{{ fwlang._('Updated') }}</td><td id="abuse-updated"></td></tr>
+            <tr><td>{{ fwlang._('Last download') }}</td><td id="abuse-state"></td></tr>
+            <tr><td colspan="2" class="text-muted">{{ fwlang._('Downloaded once a day. The free AbuseIPDB plan allows only a few downloads a day, so use Download now sparingly.') }}</td></tr>
         </tbody>
     </table>
 </div>
+
+<script>
+$(function () {
+    const label = {{ fwlang._('Map')|json_encode }};
+    document.querySelectorAll('a[href="/ui/firewallmap"]').forEach(function (link) {
+        const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+            if (node.textContent.trim() === 'Map') node.textContent = node.textContent.replace('Map', label);
+        }
+    });
+});
+</script>

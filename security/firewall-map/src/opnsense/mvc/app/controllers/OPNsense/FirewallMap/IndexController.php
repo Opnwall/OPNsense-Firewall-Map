@@ -32,7 +32,7 @@ use OPNsense\Core\ACL;
 /**
  * Full-size Firewall Map+ view, opened from the dashboard widget's link button.
  */
-class IndexController extends \OPNsense\Base\IndexController
+class IndexController extends UiController
 {
     /** A file's modification time as its cache-busting version, 0 when it is not installed. */
     private function version($path)
@@ -52,7 +52,7 @@ class IndexController extends \OPNsense\Base\IndexController
         $xml = is_file($metadata) ? simplexml_load_file($metadata) : false;
         if ($xml !== false && isset($xml->firewallmap->translations)) {
             foreach ($xml->firewallmap->translations->children() as $key => $value) {
-                $texts[$key] = gettext((string)$value);
+                $texts[$key] = (new Translation())->translate((string)$value);
             }
         }
         /* safe inside the page's <script>: no tag, quote or ampersand survives unescaped */

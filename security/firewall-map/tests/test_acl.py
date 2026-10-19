@@ -58,6 +58,8 @@ def endpoints():
         # the same controller prefix
         found.append((f"api/firewallmap/{controller}/inherited", path.name))
     for path in sorted(CONTROLLERS.glob("*Controller.php")):
+        if re.search(r"abstract\s+class", path.read_text()):
+            continue
         page = snake(path.stem.removesuffix("Controller"))
         found.append(("ui/firewallmap" if page == "index" else f"ui/firewallmap/{page}", path.name))
     return found
@@ -75,6 +77,7 @@ class AclTest(unittest.TestCase):
         address to outside services), the review queue, the service and deleting snapshots are the
         settings privilege's."""
         widget, settings = privileges()[WIDGET], privileges()[SETTINGS]
+        settings = settings + privileges()["page-diagnostics-logs-firewallmap"]
         for endpoint, _ in endpoints():
             covered = any(fnmatch.fnmatchcase(endpoint, pattern) for pattern in widget)
             widget_only = endpoint.startswith(("api/firewallmap/flow/", "api/firewallmap/snapshots/")) \

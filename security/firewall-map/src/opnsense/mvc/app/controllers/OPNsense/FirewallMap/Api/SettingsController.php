@@ -40,6 +40,11 @@ class SettingsController extends ApiMutableModelControllerBase
     protected static $internalModelName = 'firewallmap';
     protected static $internalModelClass = 'OPNsense\FirewallMap\FirewallMap';
 
+    public function getAction()
+    {
+        return (new \OPNsense\FirewallMap\Translation())->form(parent::getAction());
+    }
+
     /**
      * Validation reads configd's reports (the PF tables for the list fields and the blocklist
      * aliases, the built-in profiles): ask for them before the config lock is taken, not while

@@ -30,7 +30,7 @@ namespace OPNsense\FirewallMap;
 /**
  * Reporting: Firewall Map: Status, the collector and the freshness of the downloads.
  */
-class StatusController extends \OPNsense\Base\IndexController
+class StatusController extends UiController
 {
     public function indexAction()
     {

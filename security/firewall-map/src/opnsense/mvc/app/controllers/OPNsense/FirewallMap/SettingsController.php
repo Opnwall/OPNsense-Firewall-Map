@@ -30,7 +30,7 @@ namespace OPNsense\FirewallMap;
 /**
  * Reporting: Firewall Map: Settings, the plugin's settings.
  */
-class SettingsController extends \OPNsense\Base\IndexController
+class SettingsController extends UiController
 {
     public function indexAction()
     {

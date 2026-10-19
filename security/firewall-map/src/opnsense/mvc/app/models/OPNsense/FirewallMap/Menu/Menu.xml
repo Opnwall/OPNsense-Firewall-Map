@@ -4,7 +4,7 @@
             <Map order="10" url="/ui/firewallmap"/>
             <Status order="20" url="/ui/firewallmap/status"/>
             <Settings order="30" url="/ui/firewallmap/settings"/>
-            <LogFile VisibleName="Log File" order="40" url="/ui/diagnostics/log/core/firewallmap"/>
+            <LogFile VisibleName="Log File" order="40" url="/ui/firewallmap/log"/>
         </FirewallMap>
     </Reporting>
 </menu>

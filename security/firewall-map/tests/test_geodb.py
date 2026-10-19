@@ -238,3 +238,31 @@ class GeoDatabaseUpdateTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TransientDnsTest(unittest.TestCase):
+    def test_temporary_resolver_gap_retries_without_disabling_tls(self):
+        import socket
+        import urllib.error
+        from unittest import mock
+        import firewallmap_geodb as module
+        response = object()
+        error = urllib.error.URLError(socket.gaierror(socket.EAI_AGAIN, 'temporary'))
+        with mock.patch.object(module.urllib.request, 'urlopen', side_effect=[error, response]) as opened, \
+             mock.patch.object(module.time, 'sleep') as sleep:
+            self.assertIs(module.open_download('request'), response)
+            sleep.assert_called_once_with(2)
+            self.assertEqual(opened.call_count, 2)
+
+    def test_permanent_dns_and_http_auth_errors_do_not_retry(self):
+        import socket
+        import urllib.error
+        from unittest import mock
+        import firewallmap_geodb as module
+        for error in [urllib.error.URLError(socket.gaierror(socket.EAI_NONAME, 'unknown')),
+                      urllib.error.HTTPError('https://example.invalid', 401, 'unauthorized', {}, None)]:
+            with mock.patch.object(module.urllib.request, 'urlopen', side_effect=error) as opened, \
+                 mock.patch.object(module.time, 'sleep') as sleep:
+                with self.assertRaises(urllib.error.URLError):
+                    module.open_download('request')
+                self.assertEqual(opened.call_count, 1)
+                sleep.assert_not_called()
