@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eu
 umask 077
+git config --global --add safe.directory "$(pwd)/_feed"
 # Secrets never enter the workspace, catalog, artifacts or caches.
 KEY=$(mktemp /tmp/opnwall-release-key.XXXXXX)
 VERIFY=$(mktemp -d /tmp/opnwall-repo-verify.XXXXXX)

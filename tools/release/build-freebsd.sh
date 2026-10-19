@@ -3,6 +3,7 @@ set -eu
 [ "$(uname -s)" = FreeBSD ]
 [ "$(uname -m)" = amd64 ]
 ROOT=$(pwd)
+git config --global --add safe.directory "$ROOT"
 FRAMEWORK=/tmp/opnsense-release-framework
 FRAMEWORK_COMMIT=5ac2959c8514b4f60e94d65439be5f629f10521f
 # Pin the exact framework instead of silently falling back to master.
@@ -10,7 +11,8 @@ git clone -q https://github.com/opnsense/plugins.git "$FRAMEWORK"
 git -C "$FRAMEWORK" checkout -q "$FRAMEWORK_COMMIT"
 mkdir -p "$FRAMEWORK/security/firewall-map"
 # Export tracked source only; node_modules, bytecode and local files cannot ship.
-git archive HEAD security/firewall-map | tar -xf - -C "$FRAMEWORK"
+git archive HEAD security/firewall-map > /tmp/firewall-map-release-source.tar
+tar -xf /tmp/firewall-map-release-source.tar -C "$FRAMEWORK"
 P="$FRAMEWORK/security/firewall-map"
 mkdir -p "$P/src/libexec"
 cc -O2 -Wall -Wextra -Werror -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE \
