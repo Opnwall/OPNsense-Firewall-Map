@@ -40,7 +40,6 @@ jobs:
           python -m unittest discover -s security/firewall-map/tests
           python -m unittest discover -s tools/release/tests
   build:
-    needs: validate
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -61,7 +60,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   sign:
-    needs: build
+    needs: [validate, build]
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     environment: signed-release

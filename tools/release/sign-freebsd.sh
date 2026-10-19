@@ -11,7 +11,7 @@ printf '%s\n' "$PKG_SIGNING_KEY" > "$KEY"
 unset PKG_SIGNING_KEY
 openssl pkey -in "$KEY" -pubout > "$VERIFY/public.pem" 2>/dev/null
 cmp "$VERIFY/public.pem" _feed/keys/opnwall-dashboard-plus.pub
-export SERIES=26.7 ABI=FreeBSD:15:amd64 KEY
+export SERIES=26.7 KEY
 sh tools/publish.sh _feed dist/os-firewall-map-*.pkg
 # Verify using the device's actual trust model and an isolated pkg database.
 mkdir -p "$VERIFY/repos" "$VERIFY/db" "$VERIFY/cache"
