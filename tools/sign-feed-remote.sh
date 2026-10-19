@@ -45,6 +45,20 @@ for PACKAGE in "$STAGE"/repo/os-*.pkg; do
     case "$NAME" in *-devel) echo 'Development package refused' >&2; exit 1;; esac
     [ "$(pkg query -F "$PACKAGE" %q)" = "$EXPECTED_ABI" ] || { echo 'ABI mismatch' >&2; exit 1; }
 done
+# Keep only the newest version of each package before catalog generation.
+for PACKAGE in "$STAGE"/repo/os-*.pkg; do
+    [ -f "$PACKAGE" ] || continue
+    NAME=$(pkg query -F "$PACKAGE" %n)
+    VERSION=$(pkg query -F "$PACKAGE" %v)
+    for OTHER in "$STAGE"/repo/os-*.pkg; do
+        [ -f "$OTHER" ] || continue
+        [ "$OTHER" != "$PACKAGE" ] || continue
+        [ "$(pkg query -F "$OTHER" %n)" = "$NAME" ] || continue
+        if [ "$(pkg version -t "$(pkg query -F "$OTHER" %v)" "$VERSION")" = '<' ]; then
+            rm -f "$OTHER"
+        fi
+    done
+done
 pkg repo "$STAGE/repo" "rsa:$STAGE/repository.key"
 for NAME in packagesite data; do cp "$STAGE/repo/$NAME.pkg" "$STAGE/repo/$NAME.tzst"; done
 SIGN
