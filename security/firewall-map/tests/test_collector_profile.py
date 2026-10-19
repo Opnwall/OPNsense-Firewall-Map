@@ -26,6 +26,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from collector_build import POSIX_TEST_FLAGS
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLE = Path(__file__).with_name("fixtures") / "profiles" / "schema_v1_example.json"
@@ -39,7 +40,7 @@ class CollectorProfileTest(unittest.TestCase):
         sources = [str(path) for path in sorted((ROOT / "collector").glob("*.c")) if path.name != "main.c"]
         with tempfile.TemporaryDirectory() as directory:
             program = Path(directory) / "profile_check"
-            subprocess.run([compiler, "-std=c11", "-O1", "-Wall", "-Wextra", "-Werror", "-I", str(ROOT / "collector"),
+            subprocess.run([compiler, "-std=c11", *POSIX_TEST_FLAGS, "-O1", "-Wall", "-Wextra", "-Werror", "-I", str(ROOT / "collector"),
                             str(Path(__file__).with_name("collector_profile_check.c")), *sources, "-lm",
                             "-o", str(program)], check=True)
             builtins = [str(EXAMPLE.with_name(f"{name}.json")) for name in ("balanced", "bandwidth", "connections",

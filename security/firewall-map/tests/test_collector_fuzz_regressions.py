@@ -32,6 +32,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from collector_build import POSIX_TEST_FLAGS
 
 ROOT = Path(__file__).resolve().parents[1]
 FUZZ = ROOT / "devel/fuzz"
@@ -44,7 +45,7 @@ def build(target, output):
     # AddressSanitizer hangs at startup on macOS (Apple clang); FreeBSD runs both
     sanitizers = "address,undefined" if platform.system() == "FreeBSD" else "undefined"
     sources = [str(path) for path in sorted((ROOT / "collector").glob("*.c")) if path.name != "main.c"]
-    subprocess.run([compiler, "-std=c11", "-g", "-O1", f"-fsanitize={sanitizers}", "-fno-sanitize-recover=all",
+    subprocess.run([compiler, "-std=c11", *POSIX_TEST_FLAGS, "-g", "-O1", f"-fsanitize={sanitizers}", "-fno-sanitize-recover=all",
                     "-DFM_DEVEL_TOOLS", "-I", str(ROOT / "collector"), *sources, str(FUZZ / f"fuzz_{target}.c"),
                     str(FUZZ / "replay.c"), "-lm", "-o", str(output)], check=True)
     return output

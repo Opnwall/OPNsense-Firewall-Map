@@ -26,6 +26,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from collector_build import POSIX_TEST_FLAGS
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,7 +38,7 @@ class CollectorLifetimeTest(unittest.TestCase):
             raise unittest.SkipTest("C compiler unavailable")
         with tempfile.TemporaryDirectory() as directory:
             program = Path(directory) / "lifetime_check"
-            subprocess.run([compiler, "-std=c11", "-O1", "-Wall", "-Wextra", "-Werror", "-DFM_TEST_HOOKS",
+            subprocess.run([compiler, "-std=c11", *POSIX_TEST_FLAGS, "-O1", "-Wall", "-Wextra", "-Werror", "-DFM_TEST_HOOKS",
                             "-I", str(ROOT / "collector"), str(Path(__file__).with_name("collector_lifetime_check.c")),
                             str(ROOT / "collector" / "lifetime.c"), "-o", str(program)], check=True)
             result = subprocess.run([str(program)], capture_output=True, text=True, timeout=60)

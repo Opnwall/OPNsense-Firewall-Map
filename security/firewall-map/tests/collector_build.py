@@ -28,12 +28,14 @@ synthetic state table and make sample anchors deterministic.
 
 import os
 import shlex
+import sys
 import shutil
 import subprocess
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+POSIX_TEST_FLAGS = ["-D_POSIX_C_SOURCE=200809L", "-D_DEFAULT_SOURCE"] if sys.platform.startswith("linux") else []
 FLAGS = ("-O2", "-Wall", "-Wextra", "-Werror", "-DFM_TEST_HOOKS")
 
 
