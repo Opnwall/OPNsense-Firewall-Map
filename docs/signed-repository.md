@@ -62,3 +62,11 @@ set `enabled: no` in its `.conf`, refresh pkg catalogs, and review the upgrade p
 Restore a previous plugin using the saved package plus any formerly unmanaged extension
 files, following that backup's recovery instructions. Do not replace the global OPNsense
 config or another repository's keys just to roll back the map.
+
+## GitHub Actions
+
+New Firewall Map releases can be built, signed and published to both channels by
+[the release workflow](github-actions-release.md). Push a matching `firewall-map-VERSION`
+tag from main after updating the Makefile and versioned release notes. Manual runs default
+to a full signing rehearsal without public mutations. The `signed-release` environment
+holds the signing Secret; the offline key backup remains necessary.
