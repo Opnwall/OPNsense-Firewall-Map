@@ -91,10 +91,11 @@ def main():
         if run('git', 'rev-parse', 'HEAD', cwd=feed) != (folder / 'feed-base.txt').read_text().strip():
             raise ValueError('Feed changed during signing; restart from the signing job')
     if not release:
-        run('gh', 'release', 'create', tag, '--repo', repository, '--target', meta['source_commit'],
-            '--title', f"Firewall Map {meta['version']}", '--notes-file', str(folder / 'RELEASE_NOTES.md'), '--draft')
-        pages = json.loads(run('gh', 'api', '--paginate', '--slurp', f'repos/{repository}/releases'))
-        release = next(r for page in pages for r in page if r['tag_name'] == tag)
+        # Use the creation response: the list endpoint can lag behind a newly created draft.
+        release = json.loads(run('gh', 'api', '--method', 'POST', f'repos/{repository}/releases',
+            '-f', 'tag_name=' + tag, '-f', 'target_commitish=' + meta['source_commit'],
+            '-f', 'name=' + f"Firewall Map {meta['version']}",
+            '-f', 'body=' + (folder / 'RELEASE_NOTES.md').read_text(), '-F', 'draft=true'))
     for name in [package_name, 'SHA256SUMS']:
         asset = next((a for a in release['assets'] if a['name'] == name), None)
         if asset and asset.get('digest'):

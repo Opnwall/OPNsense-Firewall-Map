@@ -1,0 +1,60 @@
+name: Resume signed Firewall Map publication
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Original Firewall Map release run containing the signed artifact'
+        required: true
+        type: string
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: firewall-map-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    environment: signed-release
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Validate original run and preserve the current publication fix
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.run_id }}
+        run: |
+          test "$GITHUB_REF_NAME" = main
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > /tmp/original-run.json
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          run = json.loads(Path('/tmp/original-run.json').read_text())
+          assert run['repository']['full_name'] == os.environ['GITHUB_REPOSITORY']
+          assert run['path'] == '.github/workflows/firewall-map-release.yml'
+          assert run['event'] in ('push', 'workflow_dispatch')
+          sha = run['head_sha']
+          subprocess.run(['git', 'merge-base', '--is-ancestor', sha, 'origin/main'], check=True)
+          Path('/tmp/publish-fixed.py').write_bytes(Path('tools/release/publish.py').read_bytes())
+          subprocess.run(['git', 'checkout', '--detach', sha], check=True)
+          Path('tools/release/publish.py').write_bytes(Path('/tmp/publish-fixed.py').read_bytes())
+          PY
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: packages
+          path: _feed
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: firewall-map-signed
+          path: transfer
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify and resume using the identical signed artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir signed
+          tar -xzf transfer/signed-bundle.tar.gz -C signed
+          python3 tools/release/publish.py signed _feed --verify-only
+          python3 tools/release/publish.py signed _feed
