@@ -1,6 +1,6 @@
 # Dashboard Plus for OPNsense
 
-This fork adds [Mihomo connections, transfer/idle status and Simplified Chinese map text](docs/mihomo.md) to Firewall Map+.
+This fork adds [Mihomo connections, transfer/idle status and Simplified Chinese map text](docs/mihomo.md) to Firewall Map+. Packages are available through the [signed Opnwall pkg feed](docs/signed-repository.md).
 
 Dashboard plus for [OPNsense](https://opnsense.org) provides a set of informative widgets to complement/extend the widget set provided by the official OPNsense release.
 

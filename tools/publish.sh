@@ -30,7 +30,7 @@
 #
 # <feed checkout> is a checkout of this repository's `packages` branch. The given release
 # packages (default: everything in ./dist) replace older versions of the same package in
-# repo/<series>, and the whole catalog is signed again: pkg lists only what is in the folder
+# repo/<series>/<ABI>, and the whole catalog is signed again: pkg lists only what is in the folder
 # at signing time, so every package of the feed must be present. Commit and push the feed
 # checkout afterwards.
 
@@ -41,7 +41,8 @@ FEED="${1:?usage: $0 <feed checkout> [package ...]}"
 shift
 SERIES="${SERIES:-$(opnsense-version -a)}"
 KEY="${KEY:-/root/dashboard-plus-repository.key}"
-DIR="${FEED}/repo/${SERIES}"
+ABI="${ABI:-$(pkg config ABI)}"
+DIR="${FEED}/repo/${SERIES}/${ABI}"
 
 if [ "$#" -eq 0 ]; then
     set -- "${ROOT}"/dist/*.pkg
