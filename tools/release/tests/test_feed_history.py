@@ -28,7 +28,7 @@ class FeedHistoryTest(unittest.TestCase):
         self.tree = self.git('rev-parse', 'HEAD^{tree}')
         # The real feed began as an unrelated root; preserve that case.
         self.feed = self.git('commit-tree', self.tree, '-m', 'Feed root')
-        self.git('push', 'origin', 'HEAD:main', self.feed + ':packages')
+        self.git('push', 'origin', 'HEAD:refs/heads/main', self.feed + ':refs/heads/packages')
 
     def git(self, *args):
         return history.git(self.repo, *args)
@@ -56,7 +56,7 @@ class FeedHistoryTest(unittest.TestCase):
                 self.git('add', 'source')
                 new_tree = self.git('write-tree')
                 updated = self.git('commit-tree', new_tree, '-p', self.main, '-m', 'Concurrent user change')
-                real_run(['git', 'push', 'origin', updated + ':main'], cwd=self.repo, check=True, capture_output=True)
+                real_run(['git', 'push', 'origin', updated + ':refs/heads/main'], cwd=self.repo, check=True, capture_output=True)
             return real_run(args, **kwargs)
 
         with patch.object(history.subprocess, 'run', side_effect=racing_run):
