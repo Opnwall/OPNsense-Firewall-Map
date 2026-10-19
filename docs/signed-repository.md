@@ -27,7 +27,9 @@ publish the matching feed and rerun the installer; this feed is not cross-versio
 
 Keep an offline backup of the signing private key. The local default is
 `~/.local/share/opnwall/dashboard-plus/repository.key` (directory 0700, key 0600).
-Never place it inside a Git checkout or a release asset. GitHub gets only the public key.
+Never place it inside a Git checkout or a release asset. Only the public key is committed.
+For Actions, the private key is stored separately in the protected `signed-release`
+environment Secret; it is never a repository file or downloadable artifact.
 
 1. Build and test the package for the target OPNsense series/ABI with `tools/build.sh`.
    Clean test bytecode from staged sources as the build script does. Bump the package
