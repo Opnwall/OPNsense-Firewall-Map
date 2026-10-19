@@ -58,3 +58,8 @@ jobs:
           tar -xzf transfer/signed-bundle.tar.gz -C signed
           python3 tools/release/publish.py signed _feed --verify-only
           python3 tools/release/publish.py signed _feed
+  record-feed-history:
+    needs: publish
+    permissions:
+      contents: write
+    uses: ./.github/workflows/firewall-map-feed-history.yml

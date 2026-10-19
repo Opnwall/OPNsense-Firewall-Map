@@ -126,3 +126,9 @@ jobs:
         run: |
           echo "Publication enabled: $PUBLISH" >> "$GITHUB_STEP_SUMMARY"
           cat signed/SHA256SUMS >> "$GITHUB_STEP_SUMMARY"
+  record-feed-history:
+    needs: publish
+    if: github.event_name == 'push' || inputs.publish
+    permissions:
+      contents: write
+    uses: ./.github/workflows/firewall-map-feed-history.yml

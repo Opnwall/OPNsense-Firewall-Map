@@ -43,3 +43,9 @@ gh secret set PKG_SIGNING_KEY --repo Opnwall/OPNsense-Firewall-Map --env signed-
 如果需要修复发布脚本，而原运行的失败任务仍使用旧脚本，可在 main 运行 **Resume signed Firewall Map publication**，输入原发布运行的 run_id。该流程检查原运行所属仓库、工作流和源码祖先，下载原签名产物，以原源码身份校验包，并使用当前发布脚本继续发布。不会重新构建或签名。同样受 signed-release 环境和发布并发锁保护。
 
 创建草稿直接读取 GitHub API 创建响应，避免列表端点短暂未显示新草稿导致发布失败。
+
+## 自动消除软件源 Compare 提示
+
+正式发布和恢复发布成功后，调用 **Record signed feed history**。它读取最新 `main` 和 `packages`，创建以两者为父提交、文件树与最新 `main` 完全一致的历史合并提交，再以普通快进推送更新 `main`。软件源文件不会进入源码目录，`packages`、安装包和签名不变。
+
+已经记录的软件源提交会直接跳过，不产生空提交。遇到并发源码推送，重新读取分支后最多尝试三次，不强推或覆盖用户提交；持续失败会让 Actions 明确报错，可单独手动运行该工作流重试。演练（`publish=false`）不执行此步骤。GitHub 首页缓存更新后，已处理的 `packages` 提交不再触发 Compare & pull request 提示。

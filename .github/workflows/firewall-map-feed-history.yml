@@ -1,0 +1,19 @@
+name: Record signed feed history
+on:
+  workflow_call:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: firewall-map-feed-history
+  cancel-in-progress: false
+jobs:
+  record:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Record packages ancestry with unchanged main files
+        run: python3 tools/release/record-feed-history.py
