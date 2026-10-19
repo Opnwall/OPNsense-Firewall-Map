@@ -7,7 +7,7 @@ SERIES=$(opnsense-version -a)
 ABI=$(pkg config ABI)
 case "$SERIES" in ''|*[!0-9.]*) exit 1;; esac
 case "$ABI" in ''|*[!A-Za-z0-9:_-]*) exit 1;; esac
-BASE=https://raw.githubusercontent.com/Opnwall/opnsense-dashboard-plus/packages
+BASE=https://raw.githubusercontent.com/Opnwall/OPNsense-Firewall-Map/packages
 PUBKEY=/usr/local/etc/pkg/keys/opnwall-dashboard-plus.pub
 CONF=/usr/local/etc/pkg/repos/opnwall-dashboard-plus.conf
 EXPECTED=5a016623073d35afbaac96c9d97081e3f9bc7d0ff2a4b2c20aed7390936a2a31
