@@ -155,6 +155,17 @@
             <map_last_minute_hammering>{count} in the last minute · hammering</map_last_minute_hammering>
             <map_active_links_one>{count} active link</map_active_links_one>
             <map_active_links_many>{count} active links</map_active_links_many>
+            <map_transferring>{count} transferring</map_transferring>
+            <map_idle_count>{count} idle</map_idle_count>
+            <map_pending_count>{count} awaiting sample</map_pending_count>
+            <map_transferring_state>Transferring</map_transferring_state>
+            <map_idle_state>Idle</map_idle_state>
+            <map_pending_state>Awaiting sample</map_pending_state>
+            <map_show_idle>Show idle connections</map_show_idle>
+            <map_hide_idle>Hide idle connections</map_hide_idle>
+            <map_dns_estimate>DNS-estimated location</map_dns_estimate>
+            <map_application_connection>Mihomo application connection (not a PF NAT state)</map_application_connection>
+            <map_proxy_chain>Proxy chain</map_proxy_chain>
         </translations>
     </firewallmap>
 </metadata>

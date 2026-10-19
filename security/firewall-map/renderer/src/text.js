@@ -32,6 +32,8 @@
  * the English here. {name} marks a value filled in at run time; keys ending in _one / _many are
  * the singular and plural of one phrase.
  */
+import {localizeText} from './i18n.js';
+
 export const DEFAULT_TEXT = {
   geo_downloading_title: "Downloading the geolocation database",
   geo_preparing: "Starting the download…",
@@ -139,9 +141,20 @@ export const DEFAULT_TEXT = {
   map_last_minute_hammering: "{count} in the last minute · hammering",
   map_active_links_one: "{count} active link",
   map_active_links_many: "{count} active links",
+  map_transferring: "{count} transferring",
+  map_idle_count: "{count} idle",
+  map_pending_count: "{count} awaiting sample",
+  map_transferring_state: "Transferring",
+  map_idle_state: "Idle",
+  map_pending_state: "Awaiting sample",
+  map_show_idle: "Show idle connections",
+  map_hide_idle: "Hide idle connections",
+  map_dns_estimate: "DNS-estimated location",
+  map_application_connection: "Mihomo application connection (not a PF NAT state)",
+  map_proxy_chain: "Proxy chain",
 };
 
 /** The text table in use: the caller's translations over the English defaults. */
 export function textTable(text) {
-  return {...DEFAULT_TEXT, ...(text || {})};
+  return localizeText({...DEFAULT_TEXT, ...(text || {})});
 }

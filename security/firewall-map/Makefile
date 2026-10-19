@@ -1,7 +1,9 @@
 PLUGIN_NAME=		firewall-map
-PLUGIN_VERSION=		0.63
+PLUGIN_VERSION=		0.64
 PLUGIN_COMMENT=		Live geographic firewall flow visualization
 PLUGIN_MAINTAINER=	cguareschimd@gmail.com
 PLUGIN_WWW=		https://github.com/claudioguareschi/opnsense-dashboard-plus
+
+PLUGIN_DEPENDS=		py${PLUGIN_PYTHON}-yaml
 
 .include "../../Mk/plugins.mk"

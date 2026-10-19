@@ -244,6 +244,158 @@
 			})
 		};
 	}
+	var zh_CN_default = {
+		title: "防火墙地图+",
+		dashboard_title: "防火墙地图",
+		firewall_map: "防火墙地图",
+		active_flows_one: "{count} 条活跃流量",
+		active_flows_many: "{count} 条活跃流量",
+		no_flows: "暂无活跃公网流量",
+		collector_starting: "正在初始化…",
+		starting: "正在初始化…",
+		reading: "正在读取数据…",
+		reading_data: "正在读取数据…",
+		unavailable: "实时连接数据不可用",
+		data_unavailable: "实时连接数据不可用",
+		heavy_top: "突出显示最繁忙的连接",
+		heavy_rate: "同时突出显示超过此速率的连接",
+		labels: "城市标签",
+		labels_zoomed: "放大时显示",
+		on: "开启",
+		labels_off: "关闭",
+		none: "无",
+		blocks: "显示阻止的流量",
+		blocked_sources_one: "{count} 个被阻止的来源",
+		blocked_sources_many: "{count} 个被阻止的来源",
+		below_threshold: "{count} 个低于阈值",
+		block_min: "显示阻止来源的阈值",
+		every_attempt: "每次尝试",
+		attempts: "10 分钟内 {count} 次尝试",
+		hostnames: "查询主机名",
+		asn: "显示 ASN",
+		follow: "跟随流量：让地图持续聚焦当前连接",
+		snapshot_take: "保存当前地图快照，稍后在完整地图中查看",
+		snapshot_saved: "快照已保存",
+		snapshot_open: "在完整地图中打开",
+		snapshot_failed: "无法保存快照",
+		snapshot_too_soon: "刚刚保存过快照，请稍后重试",
+		geo_downloading_title: "正在下载地理位置数据库",
+		geo_preparing: "正在开始下载…",
+		geo_progress: "{done} / {total}",
+		geo_fills_in: "下载完成后地图将自动显示连接。",
+		geo_failed_title: "地理位置数据库下载失败",
+		geo_retry_now: "立即重试",
+		geo_settings: "设置",
+		map_carp_backup: "CARP 备用节点：流量经主节点转发",
+		map_profile: "{profile} 排名策略",
+		map_interval: "每 {seconds} 秒刷新",
+		map_carp_mirror: "CARP 备用节点：镜像主节点连接（无流量数据）",
+		map_waiting_restart: "采集服务正在重启，首次采样后恢复地图",
+		map_waiting_profile: "正在应用 {profile} 排名策略，首次采样后恢复地图",
+		map_ranking_bounded: "从 {count} 条连接中选取排名靠前的连接",
+		map_ranking_warming: "高负载后排名正在恢复稳定",
+		map_started_inside: "出站",
+		map_started_outside: "入站",
+		map_started_both: "双向",
+		map_toward: "主要为下载",
+		map_away: "主要为上传",
+		map_blocked: "已阻止",
+		map_flagged_blocked: "已标记 · 已阻止",
+		map_flagged_allowed: "已标记 · 已放行",
+		map_allowed: "已放行",
+		map_category_web: "网页",
+		map_category_quic: "QUIC",
+		map_category_dns: "DNS",
+		map_category_ntp: "NTP",
+		map_category_vpn: "VPN",
+		map_category_mail: "邮件",
+		map_category_remote_access: "远程访问",
+		map_category_push_stun: "推送 / STUN",
+		map_category_other: "其他",
+		map_seconds: "{count} 秒",
+		map_minutes: "{count} 分钟",
+		map_hours: "{count} 小时",
+		map_days: "{count} 天",
+		map_moments: "片刻",
+		map_port: "端口 {port}",
+		map_traffic: "流量",
+		map_this_firewall: "此防火墙",
+		map_this_firewall_title: "此防火墙",
+		map_other_targets_one: "{target}（另有 {count} 个目标）",
+		map_other_targets_many: "{target}（另有 {count} 个目标）",
+		map_open_for: "，已连接 {duration}",
+		map_reached: "{other} 通过 {service} 访问了 {where}{open}。",
+		map_reached_forward: "{other} 经端口转发通过 {service} 访问了 {where}{open}。",
+		map_other_hosts_one: "{host} 及其他 {count} 台主机",
+		map_other_hosts_many: "{host} 及其他 {count} 台主机",
+		map_other_services_one: "{service} 及其他 {count} 项服务",
+		map_other_services_many: "{service} 及其他 {count} 项服务",
+		map_transferring: "{count} 正在传输",
+		map_idle_count: "{count} 空闲",
+		map_pending_count: "{count} 等待采样",
+		map_transferring_state: "正在传输",
+		map_idle_state: "空闲",
+		map_pending_state: "等待采样",
+		map_show_idle: "显示空闲连接",
+		map_hide_idle: "隐藏空闲连接",
+		map_dns_estimate: "DNS 估算位置",
+		map_application_connection: "Mihomo 应用层连接（非 PF NAT 状态）",
+		map_proxy_chain: "代理链",
+		all_services: "所有服务",
+		all_interfaces: "所有接口",
+		all_hosts: "所有内网主机",
+		all_countries: "所有国家或地区",
+		no_talkers: "暂无流量",
+		filter_hint: "在地图中仅显示此项",
+		click_hint: "点击地图上的端点或弧线，查看详情并执行操作。",
+		sec_connection: "连接",
+		sec_firewall: "防火墙",
+		sec_reputation: "信誉",
+		via: "公网侧",
+		closed: "已关闭",
+		transferred: "已传输",
+		decision: "决策",
+		allowed: "已放行",
+		rule: "规则",
+		severity: "严重程度",
+		copy: "复制",
+		show_states: "查看状态",
+		kill_states: "清除状态",
+		state: "状态",
+		active: "活跃",
+		idle: "空闲",
+		protocol: "协议",
+		source: "来源",
+		destination: "目标",
+		"interface": "接口",
+		egress: "出口",
+		connections: "连接数",
+		current_rate: "当前速率",
+		duration: "持续时间",
+		started: "开始时间",
+		remote_port: "远端端口",
+		other_services: "其他服务",
+		yes: "是",
+		no: "否",
+		port_forward: "端口转发",
+		inbound: "入站",
+		outbound: "出站",
+		hosts: "主机",
+		countries: "国家或地区",
+		networks: "网络",
+		snapshots: "快照",
+		search: "搜索…",
+		filters: "过滤器",
+		threats: "威胁",
+		last_updated_ago: "{time}前更新",
+		captured_at: "采集时间：{time}"
+	};
+	//#endregion
+	//#region src/i18n.js
+	function localizeText(text, language = globalThis.document?.documentElement?.lang || "en") {
+		if (!/^zh(?:[-_](?:cn|hans)(?:[-_].*)?)?$/i.test(language)) return { ...text };
+		return Object.fromEntries(Object.entries(text).map(([key, value]) => [key, zh_CN_default[key] ?? value]));
+	}
 	//#endregion
 	//#region src/text.js
 	var DEFAULT_TEXT = {
@@ -352,18 +504,29 @@
 		map_last_minute: "{count} in the last minute",
 		map_last_minute_hammering: "{count} in the last minute · hammering",
 		map_active_links_one: "{count} active link",
-		map_active_links_many: "{count} active links"
+		map_active_links_many: "{count} active links",
+		map_transferring: "{count} transferring",
+		map_idle_count: "{count} idle",
+		map_pending_count: "{count} awaiting sample",
+		map_transferring_state: "Transferring",
+		map_idle_state: "Idle",
+		map_pending_state: "Awaiting sample",
+		map_show_idle: "Show idle connections",
+		map_hide_idle: "Hide idle connections",
+		map_dns_estimate: "DNS-estimated location",
+		map_application_connection: "Mihomo application connection (not a PF NAT state)",
+		map_proxy_chain: "Proxy chain"
 	};
 	/** The text table in use: the caller's translations over the English defaults. */
 	function textTable(text) {
-		return {
+		return localizeText({
 			...DEFAULT_TEXT,
 			...text || {}
-		};
+		});
 	}
 	//#endregion
 	//#region page/context.js
-	var T = window.FirewallMapPageText || {};
+	var T = textTable(window.FirewallMapPageText || {});
 	var TEXT = textTable(T);
 	var WATCHLIST = "FWMAP_Watchlist";
 	var ABUSEIPDB_BLACKLIST_LIST = "AbuseIPDB blacklist";
@@ -384,6 +547,7 @@
 		tabBeforeSnapshots: null,
 		settings: null,
 		pluginStatus: null,
+		showIdle: false,
 		filters: {
 			traffic: "all",
 			service: "",
@@ -990,19 +1154,19 @@
 				[T.protocol, escapeHtml(`${service.name}${service.port ? ` (${service.port.split("/")[0]})` : ""}`)],
 				[T.remote_port, outbound && service.port ? escapeHtml(service.port.split("/")[1]) : ""],
 				[T.other_services, (flow.services || []).slice(1).map(escapeHtml).join(", ")],
-				[T.state, (flow.activity || 0) > 0 ? pill("success", T.active, "check") : pill("default", T.idle, "dot")],
+				[T.state, flow.source === "mihomo" ? flow.transfer_state === "transferring" ? pill("success", T.map_transferring_state, "check") : pill("default", flow.transfer_state === "pending" ? T.map_pending_state : T.map_idle_state, "dot") : (flow.activity || 0) > 0 ? pill("success", T.active, "check") : pill("default", T.idle, "dot")],
 				[T.started, flow.age ? escapeHtml(agoText(Date.now() / 1e3 - flow.age)) : ""],
 				[T.transferred, flow.transferred ? rateText(flow.transferred[0], flow.transferred[1], formatBytes) : ""],
 				[T.current_rate, rateText(flow.rate_in, flow.rate_out)],
 				[T.duration, flow.age ? escapeHtml(spanText(flow.age)) : ""],
-				[T.connections, escapeHtml(flow.states)]
+				[T.connections, escapeHtml(flow.source === "mihomo" ? flow.application_connections : flow.states)]
 			]),
 			firewall: rows([
 				[T.decision, pill("success", T.allowed, "check")],
 				[T.interface, escapeHtml(inside?.interface || target?.interface || flow.egress || "")],
-				[T.rule, escapeHtml(flow.rule || "")],
+				[T.rule, flow.source === "mihomo" ? escapeHtml(`${T.map_proxy_chain}: ${(flow.proxy_chains || []).slice().reverse().join(" → ")}${flow.destination_evidence === "dns-estimate" ? " · " + T.map_dns_estimate : ""}`) : escapeHtml(flow.rule || "")],
 				[T.egress, escapeHtml(flow.egress || "")],
-				["NAT", inside && outbound ? escapeHtml(`${T.yes} (${inside.ip} → ${flow.origin})`) : target && !target.firewall ? escapeHtml(`${T.port_forward} (${flow.origin} → ${hostPort(target.ip, target.port)})`) : escapeHtml(T.no)]
+				["NAT", flow.source === "mihomo" ? escapeHtml(T.map_application_connection) : inside && outbound ? escapeHtml(`${T.yes} (${inside.ip} → ${flow.origin})`) : target && !target.firewall ? escapeHtml(`${T.port_forward} (${flow.origin} → ${hostPort(target.ip, target.port)})`) : escapeHtml(T.no)]
 			]),
 			ids: idsCard(flow.ids, null),
 			reputation: reputationCard({
@@ -1302,7 +1466,7 @@
 		if (f.traffic === "ids" && !flow.ids) return false;
 		if (f.traffic === "ids_flows" || f.traffic === "ids_addresses" && !flow.ids) return false;
 		if (f.service && flowService(flow) !== f.service) return false;
-		if (f.iface && !(flow.inside || []).some((inside) => inside.interface === f.iface)) return false;
+		if (f.iface && flow.egress !== f.iface && !(flow.inside || []).some((inside) => inside.interface === f.iface)) return false;
 		if (f.host && !(flow.inside || []).some((inside) => insideHostMatches(inside, f.host))) return false;
 		if (f.country && dest.country !== f.country) return false;
 		if (f.asn && String(dest.asn || "") !== f.asn) return false;
@@ -1335,7 +1499,8 @@
 	}
 	function filtered(summary) {
 		const locations = locationsById(summary);
-		const flows = (summary.flows || []).filter((flow) => flowMatches(flow, locations));
+		const idle = (summary.idle_flows || []).filter((flow) => flowMatches(flow, locations));
+		const flows = [...summary.flows || [], ...state.showIdle ? idle : []].filter((flow) => flowMatches(flow, locations));
 		const blocks = state.settings.blocks ? (summary.blocks || []).filter(blockMatches) : [];
 		const alerts = [
 			"",
@@ -1346,6 +1511,7 @@
 		const used = new Set(flows.flatMap((flow) => [flow.origin, flow.dest]));
 		return {
 			...summary,
+			idle_flows: idle,
 			flows,
 			blocks,
 			alerts,
@@ -3003,6 +3169,12 @@
 		});
 	}
 	function bindControls() {
+		$("#fwmap-chips").append(`<button type="button" id="fwmap-show-idle" class="btn btn-default btn-sm" aria-pressed="false">${escapeHtml(T.map_show_idle)}</button>`);
+		$("#fwmap-show-idle").on("click", function() {
+			state.showIdle = !state.showIdle;
+			$(this).attr("aria-pressed", String(state.showIdle)).toggleClass("active", state.showIdle).text(state.showIdle ? T.map_hide_idle : T.map_show_idle);
+			refresh(true);
+		});
 		bindFilters();
 		bindTalkers();
 		bindDetails();

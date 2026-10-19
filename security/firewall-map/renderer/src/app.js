@@ -34,3 +34,5 @@ export {createFirewallMap as create, host};
 export {DEFAULT_OPTIONS, parseSettings, summaryParams} from './options.js';
 export {readTheme} from './palette.js';
 export {escapeHtml} from './format.js';
+
+export {localizeText} from './i18n.js';

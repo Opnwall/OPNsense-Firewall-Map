@@ -69,7 +69,7 @@ function flowMatches(flow, locations) {
   if (f.service && flowService(flow) !== f.service) {
     return false;
   }
-  if (f.iface && !(flow.inside || []).some((inside) => inside.interface === f.iface)) {
+  if (f.iface && flow.egress !== f.iface && !(flow.inside || []).some((inside) => inside.interface === f.iface)) {
     return false;
   }
   if (f.host && !(flow.inside || []).some((inside) => insideHostMatches(inside, f.host))) {
@@ -142,13 +142,16 @@ function alertMatches(alert) {
 
 export function filtered(summary) {
   const locations = locationsById(summary);
-  const flows = (summary.flows || []).filter((flow) => flowMatches(flow, locations));
+  const idle = (summary.idle_flows || []).filter((flow) => flowMatches(flow, locations));
+  const flows = [...(summary.flows || []), ...(state.showIdle ? idle : [])]
+    .filter((flow) => flowMatches(flow, locations));
   const blocks = state.settings.blocks ? (summary.blocks || []).filter(blockMatches) : [];
   // alerting addresses without an arc: shown with everything, or when looking at IDS alerts
   const alerts = ['', 'all', 'ids', 'ids_addresses'].includes(state.filters.traffic || '') ? (summary.alerts || []).filter(alertMatches) : [];
   const used = new Set(flows.flatMap((flow) => [flow.origin, flow.dest]));
   return {
     ...summary,
+    idle_flows: idle,
     flows,
     blocks,
     alerts,

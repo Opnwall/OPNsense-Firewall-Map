@@ -139,19 +139,19 @@ function flowModel(flow, context) {
       [T.protocol, escapeHtml(`${service.name}${service.port ? ` (${service.port.split('/')[0]})` : ''}`)],
       [T.remote_port, outbound && service.port ? escapeHtml(service.port.split('/')[1]) : ''],
       [T.other_services, (flow.services || []).slice(1).map(escapeHtml).join(', ')],
-      [T.state, (flow.activity || 0) > 0 ? pill('success', T.active, 'check') : pill('default', T.idle, 'dot')],
+      [T.state, flow.source === 'mihomo' ? (flow.transfer_state === 'transferring' ? pill('success', T.map_transferring_state, 'check') : pill('default', flow.transfer_state === 'pending' ? T.map_pending_state : T.map_idle_state, 'dot')) : (flow.activity || 0) > 0 ? pill('success', T.active, 'check') : pill('default', T.idle, 'dot')],
       [T.started, flow.age ? escapeHtml(agoText(Date.now() / 1000 - flow.age)) : ''],
       [T.transferred, flow.transferred ? rateText(flow.transferred[0], flow.transferred[1], formatBytes) : ''],
       [T.current_rate, rateText(flow.rate_in, flow.rate_out)],
       [T.duration, flow.age ? escapeHtml(spanText(flow.age)) : ''],
-      [T.connections, escapeHtml(flow.states)],
+      [T.connections, escapeHtml(flow.source === 'mihomo' ? flow.application_connections : flow.states)],
     ]),
     firewall: rows([
       [T.decision, pill('success', T.allowed, 'check')],
       [T.interface, escapeHtml(inside?.interface || target?.interface || flow.egress || '')],
-      [T.rule, escapeHtml(flow.rule || '')],
+      [T.rule, flow.source === 'mihomo' ? escapeHtml(`${T.map_proxy_chain}: ${(flow.proxy_chains || []).slice().reverse().join(' → ')}${flow.destination_evidence === 'dns-estimate' ? ' · ' + T.map_dns_estimate : ''}`) : escapeHtml(flow.rule || '')],
       [T.egress, escapeHtml(flow.egress || '')],
-      ['NAT', inside && outbound ? escapeHtml(`${T.yes} (${inside.ip} → ${flow.origin})`)
+      ['NAT', flow.source === 'mihomo' ? escapeHtml(T.map_application_connection) : inside && outbound ? escapeHtml(`${T.yes} (${inside.ip} → ${flow.origin})`)
         : target && !target.firewall ? escapeHtml(`${T.port_forward} (${flow.origin} → ${hostPort(target.ip, target.port)})`) : escapeHtml(T.no)],
     ]),
     ids: idsCard(flow.ids, null),

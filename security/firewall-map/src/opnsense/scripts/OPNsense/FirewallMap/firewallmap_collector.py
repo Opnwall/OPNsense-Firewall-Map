@@ -69,6 +69,7 @@ from lib.blocklists import (
     REPUTATION_LIST, Reputation, ThreatClassification, chosen_sets, chosen_threat_lists, tables_report, threat_fields,
     threat_lists_for,
 )
+from lib import mihomo as mihomo_source
 from lib import evidence as evidence_facts
 from lib import home as firewall_home
 from lib import profiles as ranking_profiles
@@ -899,7 +900,8 @@ class Collector:
         resolver = self.hostnames if requested(HOSTNAME_MARKER, HOSTNAME_REQUEST_SECONDS) else None
         geo = self.geo
         if visible is None and not snapshot:
-            visible = self.tracker.collector_visible
+            visible, mihomo_labels, mihomo_status = mihomo_source.append_visible(
+                self.tracker.collector_visible, self.local_addresses)
             geo.resolve(address for _, local, remote, _, _ in visible for address in (remote, local)
                         if public_ip(address))
         context = {
@@ -910,6 +912,33 @@ class Collector:
         homes = self.home_plan(now)
         payload = summarize_flows(self.tracker, geo, self.local_addresses, self.role, now, time.time(), resolver, context,
                                   homes.location, visible)
+        if not snapshot and "mihomo_labels" in locals():
+            payload["sources"] = {"mihomo": mihomo_status}
+            added = 0
+            for entry in payload["flows"]:
+                row = mihomo_labels.get((entry["dest"], entry.get("owner")))
+                if row is None:
+                    continue
+                added += 1
+                entry.update(source="mihomo", rule=row["label"],
+                             destination_evidence=row["evidence"], proxy_chains=row["chains"],
+                             domain=row["host"], connection_kind="application",
+                             application_connections=row["sessions"],
+                             transfer_state=("transferring" if entry["rate"] > 0 else
+                                             "idle" if row["sampled_sessions"] else "pending"))
+                if row["host"]:
+                    payload["hostnames"][entry["dest"]] = row["host"]
+            payload["idle_flows"] = [entry for entry in payload["flows"]
+                                     if entry.get("source") == "mihomo" and entry["rate"] <= 0]
+            payload["flows"] = [entry for entry in payload["flows"]
+                                if not (entry.get("source") == "mihomo" and entry["rate"] <= 0)]
+            payload["tracked_flows"] += added - len(payload["idle_flows"])
+            payload["connection_activity"] = {
+                "transferring": sum(entry.get("source") == "mihomo" for entry in payload["flows"]),
+                "idle": sum(entry["transfer_state"] == "idle" for entry in payload["idle_flows"]),
+                "pending": sum(entry["transfer_state"] == "pending" for entry in payload["idle_flows"]),
+                "unit": "client-target groups", "sample_interval_seconds": 2,
+            }
         origin = next((location["id"] for location in payload["locations"] if location["local"]), None)
         if origin is None and self.local_addresses:
             origin = sorted(self.local_addresses)[0]
@@ -932,6 +961,8 @@ class Collector:
         # (not loopback or the IPsec encapsulation device: no inside host lives behind them)
         payload["interfaces"] = sorted({name for device, name in self.interfaces.items()
                                         if not re.match(r"^(lo|enc)\d+$", device)}, key=str.lower)
+        if any(entry.get("source") == "mihomo" for entry in payload["flows"] + payload.get("idle_flows", [])):
+            payload["interfaces"].append("Mihomo")
         payload["threat_lists"] = list(self.blocklists.names) + ([REPUTATION_LIST] if self.reputation.scores else [])
         if origin and not any(location["id"] == origin for location in payload["locations"]):
             location = homes.location(origin)

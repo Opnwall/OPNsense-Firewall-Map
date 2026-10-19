@@ -177,7 +177,16 @@ export function statusLine(parts) {
 export function statusParts(summary, shown, settings, text) {
   const parts = [];
   const count = shown.flows.length;
-  parts.push(escapeHtml(count ? plural(text, 'active_flows', count) : text.no_flows));
+  if (summary.sources?.mihomo?.state === 'ok' && summary.connection_activity) {
+    const idle = shown.idle_flows || [];
+    const transferring = shown.flows.filter(flow => (flow.rate || 0) > 0).length;
+    parts.push(escapeHtml(fill(text.map_transferring, {count: transferring})));
+    parts.push(escapeHtml(fill(text.map_idle_count, {count: idle.filter(flow => flow.transfer_state === 'idle').length})));
+    const pending = idle.filter(flow => flow.transfer_state === 'pending').length;
+    if (pending) parts.push(escapeHtml(fill(text.map_pending_count, {count: pending})));
+  } else {
+    parts.push(escapeHtml(count ? plural(text, 'active_flows', count) : text.no_flows));
+  }
   if (settings.blocks) {
     const blocked = (shown.blocks || []).length;
     const below = summary.blocks_below || 0;

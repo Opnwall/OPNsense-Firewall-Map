@@ -30,7 +30,7 @@
  */
 import {textTable} from '../src/text.js';
 
-export const T = window.FirewallMapPageText || {};
+export const T = textTable(window.FirewallMapPageText || {});
 // the renderer's sentences (flow summaries, IDS lines) in the page's language
 export const TEXT = textTable(T);
 
@@ -61,6 +61,7 @@ export const state = {
   settings: null,
   // the plugin settings (null for users who may not read them)
   pluginStatus: null,
+  showIdle: false,
   filters: {traffic: 'all', service: '', iface: '', host: '', country: '', asn: ''},
   colorMode: 'initiator',
   talkerTab: 'hosts',

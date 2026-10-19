@@ -336,6 +336,13 @@ function bindDetails() {
 }
 
 function bindControls() {
+  $('#fwmap-chips').append(`<button type="button" id="fwmap-show-idle" class="btn btn-default btn-sm" aria-pressed="false">${escapeHtml(T.map_show_idle)}</button>`);
+  $('#fwmap-show-idle').on('click', function () {
+    state.showIdle = !state.showIdle;
+    $(this).attr('aria-pressed', String(state.showIdle)).toggleClass('active', state.showIdle)
+      .text(state.showIdle ? T.map_hide_idle : T.map_show_idle);
+    refresh(true);
+  });
   bindFilters();
   bindTalkers();
   bindDetails();

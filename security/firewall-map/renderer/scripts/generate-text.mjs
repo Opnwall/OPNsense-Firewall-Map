@@ -52,13 +52,15 @@ fs.writeFileSync(target, `${header}
  * the English here. {name} marks a value filled in at run time; keys ending in _one / _many are
  * the singular and plural of one phrase.
  */
+import {localizeText} from './i18n.js';
+
 export const DEFAULT_TEXT = {
 ${strings.map(([key, value]) => `  ${key}: ${JSON.stringify(value)},`).join('\n')}
 };
 
 /** The text table in use: the caller's translations over the English defaults. */
 export function textTable(text) {
-  return {...DEFAULT_TEXT, ...(text || {})};
+  return localizeText({...DEFAULT_TEXT, ...(text || {})});
 }
 `);
 console.log(`src/text.js: ${strings.length} strings`);
