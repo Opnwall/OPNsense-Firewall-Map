@@ -523,7 +523,7 @@ static bool select_scored(struct ranker *p, const struct aggregate *a, const str
     for (size_t k = 0; k < reserved[c] && count < limit; k++)
       p->selection[count++] = (struct selected){p->reserved[c][k].flow, p->reserved[c][k].score};
   size_t floors = count;
-  qsort(p->general, general, sizeof(*p->general), best_first);
+  if (general > 1) qsort(p->general, general, sizeof(*p->general), best_first);
   for (size_t k = 0; k < general && count < limit; k++) {
     bool taken = false;
     for (size_t j = 0; j < floors && !taken; j++) taken = p->selection[j].flow == p->general[k].flow;
@@ -536,7 +536,7 @@ static bool select_scored(struct ranker *p, const struct aggregate *a, const str
     ranking_rates(r, p->selection[k].flow, &rates);
     order[k] = (struct candidate_row){p->selection[k].flow, p->selection[k].score, rates.order};
   }
-  qsort(order, count, sizeof(*order), best_first);
+  if (count > 1) qsort(order, count, sizeof(*order), best_first);
   for (size_t k = 0; k < count; k++) p->selection[k] = (struct selected){order[k].flow, order[k].score};
   p->selected = count;
   /* incumbency for the next sample */

@@ -219,7 +219,7 @@ size_t summary_top(const struct summary *s, struct summary_entry *out, size_t li
     }
     out[at] = *e;
   }
-  if (kept < limit) qsort(out, kept, sizeof(*out), larger_first);
+  if (kept > 1 && kept < limit) qsort(out, kept, sizeof(*out), larger_first);
   return kept;
 }
 size_t summary_bytes(const struct summary *s) {

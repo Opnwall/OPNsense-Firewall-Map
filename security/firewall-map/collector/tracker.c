@@ -163,7 +163,7 @@ static size_t promotion_candidates(struct tracker *t, const struct profile *def,
       t->promotions[count++].estimate = profile_estimate(def, values, profile_unit_multiplier(def, unit));
     }
   }
-  qsort(t->promotions, count, sizeof(*t->promotions), better_promotion);
+  if (count > 1) qsort(t->promotions, count, sizeof(*t->promotions), better_promotion);
   return count;
 }
 static bool pin(struct tracker *t, const struct flow *f, struct fm_error *error) {
@@ -233,7 +233,7 @@ bool tracker_finish(struct tracker *t, const struct aggregate *a, const struct r
       ranking_rates(ranking, n, &rates);
       t->scored[n] = (struct scored){(uint32_t)n, ranker_score(hints->ranker, n), rates.order};
     }
-    qsort(t->scored, counts.flows, sizeof(*t->scored), better_scored);
+    if (counts.flows > 1) qsort(t->scored, counts.flows, sizeof(*t->scored), better_scored);
     /* promotions: the best untracked candidates, each displacing the
      * incumbent at T's edge only by the incumbency margin */
     size_t offered = promotion_candidates(t, ranker_profile(hints->ranker), interval);

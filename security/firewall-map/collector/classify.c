@@ -137,7 +137,7 @@ static bool emit(struct intervals *out, u128 lo, u128 hi, bool member, struct fm
  * finds, for every point, its longest matching prefix. */
 static bool compile_set(struct prefix *p, size_t n, u128 max, struct intervals *out,
                         struct fm_error *error) {
-  qsort(p, n, sizeof(*p), compare_prefix);
+  if (n > 1) qsort(p, n, sizeof(*p), compare_prefix);
   struct prefix stack[130];
   size_t depth = 0;
   u128 cursor = 0;

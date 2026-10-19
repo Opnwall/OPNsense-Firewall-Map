@@ -582,7 +582,7 @@ static bool snapshot_candidates(struct engine *e, const struct aggregate *a,
     ranks[evidence++] = (struct snapshot_rank){(uint32_t)n, security_class(&flow->evidence),
                                                ranker_score(e->ranker, n), rates.order};
   }
-  qsort(ranks, evidence, sizeof(*ranks), snapshot_first);
+  if (evidence > 1) qsort(ranks, evidence, sizeof(*ranks), snapshot_first);
   size_t kept = 0, wanted = 0;
   for (size_t n = 0; n < evidence; n++, wanted++) {
     taken[ranks[n].flow] = 1;

@@ -142,7 +142,7 @@ struct threat_summary *threat_summary_create(const struct aggregate *aggregate,
   size_t flagged = 0;
   for (size_t n = 0; n < row_count; n++)
     if (rows[n].flagged) order[flagged++] = &rows[n];
-  qsort(order, flagged, sizeof(*order), compare_rows);
+  if (flagged > 1) qsort(order, flagged, sizeof(*order), compare_rows);
   size_t kept = flagged < limits.remote_limit ? flagged : limits.remote_limit;
   summary->remotes_omitted = flagged - kept;
   summary->remotes = kept ? fm_calloc(kept, sizeof(*summary->remotes)) : NULL;
