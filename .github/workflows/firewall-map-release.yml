@@ -83,7 +83,7 @@ jobs:
           release: '15.1'
           arch: amd64
           envs: PKG_SIGNING_KEY
-          prepare: pkg install -y git
+          prepare: pkg install -y git python313
           run: sh tools/release/sign-freebsd.sh
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
