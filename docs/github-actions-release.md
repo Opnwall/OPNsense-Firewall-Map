@@ -37,3 +37,9 @@ gh secret set PKG_SIGNING_KEY --repo Opnwall/OPNsense-Firewall-Map --env signed-
 ```
 
 产物保留 30 天。工作流不登录或自动升级家庭设备；设备继续通过既有签名源的固件更新获取新版本。
+
+## 使用原签名产物恢复发布
+
+如果需要修复发布脚本，而原运行的失败任务仍使用旧脚本，可在 main 运行 **Resume signed Firewall Map publication**，输入原发布运行的 run_id。该流程检查原运行所属仓库、工作流和源码祖先，下载原签名产物，以原源码身份校验包，并使用当前发布脚本继续发布。不会重新构建或签名。同样受 signed-release 环境和发布并发锁保护。
+
+创建草稿直接读取 GitHub API 创建响应，避免列表端点短暂未显示新草稿导致发布失败。
