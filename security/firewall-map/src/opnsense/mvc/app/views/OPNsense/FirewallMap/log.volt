@@ -1,4 +1,4 @@
-<script src="/ui/js/firewall-map-log.js?v=2"></script>
+<script src="/ui/js/firewall-map-log.js?v=3"></script>
 <div class="alert alert-info">{{ fwlang._('Historical warnings are retained. Check the latest entries and the Status page for current download health.') }} <a href="/ui/firewallmap/status">{{ fwlang._('Status') }}</a></div>
 {#
  # Copyright (c) 2019 Deciso B.V.
