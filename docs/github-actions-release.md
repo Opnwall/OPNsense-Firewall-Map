@@ -19,7 +19,7 @@
 ## 单一构建产物
 
 - Linux 检查前端构建一致性、Python/前端与发布脚本测试。
-- GitHub 托管的 FreeBSD 15.1 VM 使用固定版本的官方插件框架编译 PF 采集器并打包。仅导出 Git 跟踪的文件。Python 3.13 的 YAML 依赖来自经过固定官方指纹验证的 OPNsense 源，不使用 FreeBSD 默认 Python 版本的替代包。
+- GitHub 托管的 FreeBSD 15.1 VM 使用固定版本的官方插件框架编译 PF 采集器并打包。仅导出 Git 跟踪的文件。PF netlink 使用固定提交及 SHA256 的 OPNsense 26.7 官方头文件，防止误用标准 FreeBSD 的不同扩展接口。Python 3.13 的 YAML 依赖来自经过固定官方指纹验证的 OPNsense 源，不使用 FreeBSD 默认 Python 版本的替代包。
 - 同一次构建生成安装包、SHA256SUMS、Release 更新说明和 release.json。签名任务保存其他插件，更新目标包和目录，并验证正确公钥成功、错误公钥失败。
 - 最后一个任务再次验证包内部版本/ABI、源码提交、SHA256、Release/软件源包字节一致以及新旧目录后缀一致。
 - 先准备 Release 草稿并回读资产校验，再提交签名源，最后公开 Release 并设为 Latest。发布采用并发锁和 Git 非强制推送，避免丢失他人发布。

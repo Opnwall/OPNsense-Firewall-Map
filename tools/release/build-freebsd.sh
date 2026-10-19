@@ -13,10 +13,16 @@ mkdir -p "$FRAMEWORK/security/firewall-map"
 # Export tracked source only; node_modules, bytecode and local files cannot ship.
 git archive HEAD security/firewall-map > /tmp/firewall-map-release-source.tar
 tar -xf /tmp/firewall-map-release-source.tar -C "$FRAMEWORK"
+# OPNsense extends PF netlink with PF_ST_RULE_LABEL; stock FreeBSD headers are insufficient.
+# Pin the official 26.7 header, also matched against the target OPNsense 26.7.7 device.
+HEADERS=/tmp/opnsense-release-headers
+mkdir -p "$HEADERS/netpfil/pf"
+fetch -qo "$HEADERS/netpfil/pf/pf_nl.h" https://raw.githubusercontent.com/opnsense/src/01510f095c2ba12ced4959a102403c261c95b2a4/sys/netpfil/pf/pf_nl.h
+[ "$(sha256 -q "$HEADERS/netpfil/pf/pf_nl.h")" = 1358de856e395f2ba90701e8064479bd1052149c155da91ae73a1dfe74474952 ]
 P="$FRAMEWORK/security/firewall-map"
 mkdir -p "$P/src/libexec"
 cc -O2 -Wall -Wextra -Werror -fstack-protector-strong -D_FORTIFY_SOURCE=2 -fPIE \
-    -I"$P/collector" "$P"/collector/*.c -lm -pie -Wl,-z,relro -Wl,-z,now \
+    -I"$HEADERS" -I"$P/collector" "$P"/collector/*.c -lm -pie -Wl,-z,relro -Wl,-z,now \
     -o "$P/src/libexec/firewallmap-collector"
 chmod 755 "$P/src/libexec/firewallmap-collector"
 (cd "$P" && make PLUGIN_PYTHON=313 PLUGIN_PHP=85 PLUGIN_ABI=26.7 PLUGIN_HASH="$(git -C "$ROOT" rev-parse HEAD)" package)
